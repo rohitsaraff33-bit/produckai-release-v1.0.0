@@ -81,14 +81,14 @@ open http://localhost:3000
 
 When you run `make up`, Docker Compose starts these services:
 
-| Service | Port | Description |
-|---------|------|-------------|
-| **postgres** | 5432 | Postgres 16 + pgvector extension |
-| **redis** | 6379 | Redis 7 (for Celery task queue) |
-| **api** | 8000 | FastAPI backend (auto-reload enabled) |
-| **worker** | - | Celery worker (clustering, embeddings) |
-| **beat** | - | Celery beat (scheduled tasks) |
-| **web** | 3000 | Next.js web UI (optional) |
+| Service      | Port | Description                            |
+| ------------ | ---- | -------------------------------------- |
+| **postgres** | 5432 | Postgres 16 + pgvector extension       |
+| **redis**    | 6379 | Redis 7 (for Celery task queue)        |
+| **api**      | 8000 | FastAPI backend (auto-reload enabled)  |
+| **worker**   | -    | Celery worker (clustering, embeddings) |
+| **beat**     | -    | Celery beat (scheduled tasks)          |
+| **web**      | 3000 | Next.js web UI (optional)              |
 
 ---
 
@@ -99,6 +99,7 @@ If you prefer to run services natively:
 ### 1. Install System Dependencies
 
 **macOS:**
+
 ```bash
 brew install python@3.11 postgresql@16 redis
 brew services start postgresql@16
@@ -106,6 +107,7 @@ brew services start redis
 ```
 
 **Ubuntu/Debian:**
+
 ```bash
 sudo apt update
 sudo apt install python3.11 python3.11-venv postgresql-16 postgresql-16-pgvector redis-server
@@ -126,6 +128,7 @@ GRANT ALL PRIVILEGES ON DATABASE produckai TO produckai;
 ```
 
 Enable pgvector extension:
+
 ```bash
 psql -U produckai -d produckai -c "CREATE EXTENSION IF NOT EXISTS vector;"
 ```
@@ -151,6 +154,7 @@ cp .env.example .env
 ```
 
 Edit `.env` to point to your local Postgres and Redis:
+
 ```bash
 DATABASE_URL=postgresql://produckai:produckai_dev_password@localhost:5432/produckai
 REDIS_URL=redis://localhost:6379/0
@@ -166,18 +170,21 @@ alembic upgrade head
 ### 6. Start Services
 
 **Terminal 1 - API:**
+
 ```bash
 source venv/bin/activate
 uvicorn apps.api.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 **Terminal 2 - Celery Worker:**
+
 ```bash
 source venv/bin/activate
 celery -A apps.worker.celery_app worker --loglevel=info
 ```
 
 **Terminal 3 - Celery Beat (optional):**
+
 ```bash
 source venv/bin/activate
 celery -A apps.worker.celery_app beat --loglevel=info
@@ -334,10 +341,11 @@ make up
 **Error:** `Bind for 0.0.0.0:8000 failed: port is already allocated`
 
 **Solution:** Stop existing service or change port in `docker-compose.yml`:
+
 ```yaml
 api:
   ports:
-    - "8001:8000"  # Change host port to 8001
+    - "8001:8000" # Change host port to 8001
 ```
 
 ### Database Migration Errors
@@ -345,11 +353,13 @@ api:
 **Error:** `sqlalchemy.exc.ProgrammingError: relation "feedback" does not exist`
 
 **Solution:** Run migrations:
+
 ```bash
 make migrate
 ```
 
 If that fails:
+
 ```bash
 make shell-db
 DROP SCHEMA public CASCADE;
@@ -364,11 +374,13 @@ make migrate
 **Error:** Clustering job completes but no themes generated
 
 **Possible causes:**
+
 1. Less than 20 feedback items (default `CLUSTERING_MIN_FEEDBACK_COUNT`)
 2. ML model not downloaded
 3. Worker not running
 
 **Solution:**
+
 ```bash
 # Check feedback count
 make shell-db
@@ -389,6 +401,7 @@ make cluster
 **Error:** `FileNotFoundError: sentence-transformers/all-MiniLM-L6-v2`
 
 **Solution:**
+
 ```bash
 # Pre-download model
 python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')"
@@ -402,11 +415,13 @@ EMBEDDING_MODEL=sentence-transformers/multi-qa-MiniLM-L6-cos-v1
 **Error:** Worker killed or API crashes
 
 **Solution:** Reduce batch size in `.env`:
+
 ```bash
 EMBEDDING_BATCH_SIZE=16  # Default is 32
 ```
 
 Or allocate more memory to Docker:
+
 - Docker Desktop → Settings → Resources → Memory: 8GB
 
 ---
@@ -418,9 +433,11 @@ Now that your backend is running:
 1. **Explore the API**: http://localhost:8000/docs
 2. **View the Web UI**: http://localhost:3000
 3. **Install the MCP Server**: Connect Claude Desktop to your backend
+
    ```bash
    pip install produckai-mcp-server
    ```
+
    See: https://github.com/rohitsaraff33-bit/produckai-mcp-server
 
 4. **Customize Scoring Weights**: Edit `.env` or use the Web UI

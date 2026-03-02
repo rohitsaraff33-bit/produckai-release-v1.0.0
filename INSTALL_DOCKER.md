@@ -3,6 +3,7 @@
 ## Quick Install (2 minutes)
 
 ### Option 1: Download Directly
+
 1. **Download Docker Desktop**: https://www.docker.com/products/docker-desktop/
 2. Click "Download for Mac" (Apple Silicon version)
 3. Open the downloaded `Docker.dmg` file
@@ -12,9 +13,11 @@
 7. Wait for Docker to start (you'll see a whale icon in your menu bar)
 
 ### Option 2: Using Homebrew (if Option 1 failed)
+
 ```bash
 brew install --cask docker
 ```
+
 Then open Docker from Applications or Spotlight.
 
 ## After Installation
@@ -42,6 +45,7 @@ open http://localhost:3000
 If you prefer not to use Docker, you can run services locally:
 
 ### Install Requirements
+
 ```bash
 # PostgreSQL with pgvector
 brew install postgresql@16
@@ -58,6 +62,7 @@ brew install node@20
 ```
 
 ### Setup Services
+
 ```bash
 # Start PostgreSQL
 brew services start postgresql@16
@@ -77,6 +82,7 @@ npm install
 ```
 
 ### Run Services
+
 ```bash
 # Terminal 1: API
 cd apps/api
@@ -105,6 +111,7 @@ This is more complex but doesn't require Docker.
 ## Recommended: Use Docker
 
 Docker is easier because it:
+
 - ✅ Handles all dependencies automatically
 - ✅ Works the same on all machines
 - ✅ One command to start everything
@@ -113,6 +120,7 @@ Docker is easier because it:
 ---
 
 **Next**: Once Docker is running, return to the terminal and run:
+
 ```bash
 make up
 ```

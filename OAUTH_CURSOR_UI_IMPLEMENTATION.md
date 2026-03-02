@@ -3,10 +3,12 @@
 ## 🎯 Executive Summary
 
 This document provides **complete implementations** for:
+
 - ✅ **OAuth infrastructure** (Google & Zoom with PKCE, token encryption, auto-refresh)
 - 📐 **Cursor-style UI** (comprehensive blueprints, component starters, design system)
 
 **Estimated work**: 40-50 hours total
+
 - OAuth backend: 6-8 hours (70% complete - code provided below)
 - Cursor UI: 30-40 hours (blueprints + starters provided)
 
@@ -715,6 +717,7 @@ ZOOM_CLIENT_SECRET=
 ### Quick Start
 
 1. **Install dependencies**:
+
    ```bash
    cd apps/web
    npm install react-resizable-panels cmdk @monaco-editor/react lucide-react framer-motion
@@ -739,11 +742,13 @@ python -c 'import os,base64; print(base64.b64encode(os.urandom(32)).decode())'
 ### Configure OAuth Apps
 
 **Google Cloud Console**:
+
 1. Create OAuth 2.0 Client ID (Web application)
 2. Add redirect URI: `http://localhost:8000/auth/google/callback`
 3. Copy Client ID and Secret to `.env`
 
 **Zoom Marketplace**:
+
 1. Create OAuth app
 2. Add redirect URI: `http://localhost:8000/auth/zoom/callback`
 3. Add scopes: `recording:read:admin`, `user:read:admin`
@@ -848,6 +853,6 @@ apps/web/ (Cursor UI - see blueprints in IMPLEMENTATION_GUIDE_OAUTH_UI.md)
 5. **Add telemetry** for token refresh metrics
 
 **Estimated Timeline**:
+
 - OAuth: 2-3 days (code complete, needs testing + polish)
 - Cursor UI: 1-2 weeks (systematic component building)
-

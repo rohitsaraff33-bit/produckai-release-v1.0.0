@@ -1,102 +1,102 @@
-'use client'
+"use client";
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 interface ChatMessage {
-  role: 'user' | 'assistant'
-  content: string
+  role: "user" | "assistant";
+  content: string;
 }
 
 interface ChatProps {
-  selectedInsightId?: string | null
-  onClose: () => void
+  selectedInsightId?: string | null;
+  onClose: () => void;
 }
 
 const SUGGESTED_QUESTIONS = [
   {
-    icon: '🎯',
-    text: 'What should I focus on for next quarter?',
+    icon: "🎯",
+    text: "What should I focus on for next quarter?",
   },
   {
-    icon: '📊',
-    text: 'What are my top customer complaints?',
+    icon: "📊",
+    text: "What are my top customer complaints?",
   },
   {
-    icon: '⚡',
-    text: 'Show me quick wins',
+    icon: "⚡",
+    text: "Show me quick wins",
   },
   {
-    icon: '🏢',
-    text: 'What is blocking enterprise deals?',
+    icon: "🏢",
+    text: "What is blocking enterprise deals?",
   },
-]
+];
 
 export default function Chat({ selectedInsightId, onClose }: ChatProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>([])
-  const [input, setInput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   // Focus input on mount
   useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
+    inputRef.current?.focus();
+  }, []);
 
   const sendMessage = async (messageText?: string) => {
-    const text = messageText || input.trim()
-    if (!text) return
+    const text = messageText || input.trim();
+    if (!text) return;
 
     // Add user message
-    const userMessage: ChatMessage = { role: 'user', content: text }
-    setMessages((prev) => [...prev, userMessage])
-    setInput('')
-    setLoading(true)
+    const userMessage: ChatMessage = { role: "user", content: text };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setLoading(true);
 
     try {
       const response = await fetch(`${API_URL}/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: text,
           selected_insight_id: selectedInsightId,
           conversation_history: messages.slice(-4), // Last 4 messages for context
         }),
-      })
+      });
 
-      if (!response.ok) throw new Error('Failed to send message')
+      if (!response.ok) throw new Error("Failed to send message");
 
-      const data = await response.json()
+      const data = await response.json();
       const assistantMessage: ChatMessage = {
-        role: 'assistant',
+        role: "assistant",
         content: data.response,
-      }
-      setMessages((prev) => [...prev, assistantMessage])
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
-      console.error('Failed to send message:', error)
+      console.error("Failed to send message:", error);
       const errorMessage: ChatMessage = {
-        role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
-      }
-      setMessages((prev) => [...prev, errorMessage])
+        role: "assistant",
+        content: "Sorry, I encountered an error. Please try again.",
+      };
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      sendMessage()
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
     }
-  }
+  };
 
   return (
     <aside className="w-96 bg-[#252526] border-l border-[#3e3e42] flex flex-col">
@@ -139,9 +139,9 @@ export default function Chat({ selectedInsightId, onClose }: ChatProps) {
               <div
                 key={idx}
                 className={`${
-                  message.role === 'user'
-                    ? 'ml-8 bg-blue-600 text-white'
-                    : 'mr-8 bg-[#3e3e42] text-gray-200'
+                  message.role === "user"
+                    ? "ml-8 bg-blue-600 text-white"
+                    : "mr-8 bg-[#3e3e42] text-gray-200"
                 } rounded-lg p-3 text-sm whitespace-pre-wrap`}
               >
                 {message.content}
@@ -189,5 +189,5 @@ export default function Chat({ selectedInsightId, onClose }: ChatProps) {
         )}
       </div>
     </aside>
-  )
+  );
 }

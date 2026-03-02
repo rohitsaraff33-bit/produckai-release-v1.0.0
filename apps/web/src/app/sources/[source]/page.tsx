@@ -1,112 +1,121 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import Layout from '../../../components/Layout'
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Layout from "../../../components/Layout";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 interface FeedbackItem {
-  id: string
-  source: string
-  source_id: string
-  text: string
-  account: string
-  created_at: string
+  id: string;
+  source: string;
+  source_id: string;
+  text: string;
+  account: string;
+  created_at: string;
   meta?: {
-    title?: string
-    url?: string
-    modified_time?: string
-    owner?: string
-  }
+    title?: string;
+    url?: string;
+    modified_time?: string;
+    owner?: string;
+  };
 }
 
 interface DocumentSummary {
-  document_id: string
-  title: string
-  url?: string
-  account?: string
-  created_at: string
-  modified_at?: string
-  chunk_count: number
-  summary: string
-  owner?: string
+  document_id: string;
+  title: string;
+  url?: string;
+  account?: string;
+  created_at: string;
+  modified_at?: string;
+  chunk_count: number;
+  summary: string;
+  owner?: string;
 }
 
-const SOURCE_INFO: Record<string, { name: string; icon: string; color: string }> = {
-  slack: { name: 'Slack', icon: '💬', color: 'purple' },
-  jira: { name: 'Jira', icon: '🎫', color: 'blue' },
-  zoom: { name: 'Zoom', icon: '🎥', color: 'blue' },
-  gdrive: { name: 'Google Drive', icon: '📄', color: 'green' },
-}
+const SOURCE_INFO: Record<
+  string,
+  { name: string; icon: string; color: string }
+> = {
+  slack: { name: "Slack", icon: "💬", color: "purple" },
+  jira: { name: "Jira", icon: "🎫", color: "blue" },
+  zoom: { name: "Zoom", icon: "🎥", color: "blue" },
+  gdrive: { name: "Google Drive", icon: "📄", color: "green" },
+};
 
 export default function SourceDetailPage() {
-  const params = useParams()
-  const router = useRouter()
-  const source = params.source as string
+  const params = useParams();
+  const router = useRouter();
+  const source = params.source as string;
 
-  const [feedbackItems, setFeedbackItems] = useState<FeedbackItem[]>([])
-  const [documents, setDocuments] = useState<DocumentSummary[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [feedbackItems, setFeedbackItems] = useState<FeedbackItem[]>([]);
+  const [documents, setDocuments] = useState<DocumentSummary[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const sourceInfo = SOURCE_INFO[source] || { name: source, icon: '📁', color: 'gray' }
+  const sourceInfo = SOURCE_INFO[source] || {
+    name: source,
+    icon: "📁",
+    color: "gray",
+  };
 
   // Sources that use chunking and should show document view
-  const usesDocumentView = ['gdrive', 'zoom'].includes(source)
+  const usesDocumentView = ["gdrive", "zoom"].includes(source);
 
   useEffect(() => {
-    fetchSourceData()
-  }, [source])
+    fetchSourceData();
+  }, [source]);
 
   const fetchSourceData = async () => {
     try {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
 
       // Map source ID to API source enum
       const sourceMap: Record<string, string> = {
-        'slack': 'slack',
-        'jira': 'jira',
-        'zoom': 'zoom_transcript',
-        'gdrive': 'gdoc',
-      }
+        slack: "slack",
+        jira: "jira",
+        zoom: "zoom_transcript",
+        gdrive: "gdoc",
+      };
 
-      const apiSource = sourceMap[source] || source
+      const apiSource = sourceMap[source] || source;
 
       // Use document view for sources that chunk transcripts
       if (usesDocumentView) {
-        const response = await fetch(`${API_URL}/feedback/documents?source=${apiSource}`)
+        const response = await fetch(
+          `${API_URL}/feedback/documents?source=${apiSource}`,
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch documents')
+          throw new Error("Failed to fetch documents");
         }
-        const data = await response.json()
-        setDocuments(data)
+        const data = await response.json();
+        setDocuments(data);
       } else {
-        const response = await fetch(`${API_URL}/feedback?source=${apiSource}`)
+        const response = await fetch(`${API_URL}/feedback?source=${apiSource}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch feedback items')
+          throw new Error("Failed to fetch feedback items");
         }
-        const data = await response.json()
-        setFeedbackItems(data)
+        const data = await response.json();
+        setFeedbackItems(data);
       }
     } catch (err) {
-      console.error('Error fetching source data:', err)
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      console.error("Error fetching source data:", err);
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  }
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   if (loading) {
     return (
@@ -118,7 +127,7 @@ export default function SourceDetailPage() {
           </div>
         </div>
       </Layout>
-    )
+    );
   }
 
   if (error) {
@@ -137,16 +146,17 @@ export default function SourceDetailPage() {
           </div>
         </div>
       </Layout>
-    )
+    );
   }
 
-  const itemCount = usesDocumentView ? documents.length : feedbackItems.length
-  const hasItems = itemCount > 0
+  const itemCount = usesDocumentView ? documents.length : feedbackItems.length;
+  const hasItems = itemCount > 0;
 
   // Get unique account for summary (for Google Drive, get owner email)
-  const accountSummary = usesDocumentView && documents.length > 0
-    ? documents[0].owner || 'Multiple accounts'
-    : null
+  const accountSummary =
+    usesDocumentView && documents.length > 0
+      ? documents[0].owner || "Multiple accounts"
+      : null;
 
   return (
     <Layout>
@@ -161,7 +171,9 @@ export default function SourceDetailPage() {
           </button>
           <div className="flex items-center gap-4">
             <div className="text-4xl">{sourceInfo.icon}</div>
-            <h1 className="text-3xl font-bold text-gray-100">{sourceInfo.name}</h1>
+            <h1 className="text-3xl font-bold text-gray-100">
+              {sourceInfo.name}
+            </h1>
           </div>
         </div>
 
@@ -198,7 +210,8 @@ export default function SourceDetailPage() {
             <div className="text-6xl mb-4">{sourceInfo.icon}</div>
             <div className="text-xl text-gray-400 mb-2">No items found</div>
             <p className="text-sm text-gray-500">
-              {usesDocumentView ? 'Documents' : 'Feedback items'} from {sourceInfo.name} will appear here once synced
+              {usesDocumentView ? "Documents" : "Feedback items"} from{" "}
+              {sourceInfo.name} will appear here once synced
             </p>
           </div>
         ) : usesDocumentView ? (
@@ -291,7 +304,9 @@ export default function SourceDetailPage() {
                     {item.meta?.modified_time && (
                       <div className="flex items-center gap-1.5 text-gray-400">
                         <span>🕒</span>
-                        <span>Modified {formatDate(item.meta.modified_time)}</span>
+                        <span>
+                          Modified {formatDate(item.meta.modified_time)}
+                        </span>
                       </div>
                     )}
                   </div>
@@ -313,7 +328,9 @@ export default function SourceDetailPage() {
                 <div className="mt-3 flex items-center gap-4 text-xs text-gray-500">
                   <span>{item.text.length} characters</span>
                   <span>•</span>
-                  <span>{Math.ceil(item.text.split(/\s+/).length / 200)} min read</span>
+                  <span>
+                    {Math.ceil(item.text.split(/\s+/).length / 200)} min read
+                  </span>
                 </div>
               </div>
             ))}
@@ -321,5 +338,5 @@ export default function SourceDetailPage() {
         )}
       </div>
     </Layout>
-  )
+  );
 }

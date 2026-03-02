@@ -17,6 +17,7 @@
 ## Development
 
 The extension uses Manifest V3 and includes:
+
 - `manifest.json`: Extension configuration
 - `popup.html/js`: Popup UI when clicking extension icon
 - `content.js`: Script injected into Jira pages

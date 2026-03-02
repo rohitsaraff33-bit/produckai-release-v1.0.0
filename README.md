@@ -32,6 +32,7 @@ open http://localhost:8000/docs
 ```
 
 **That's it!** You now have the **complete ProduckAI platform** running locally:
+
 - ✅ **Backend API** at http://localhost:8000 (FastAPI)
 - ✅ **Frontend Web UI** at http://localhost:3000 (Next.js)
 - ✅ **48 demo feedback** items from Slack, Jira, Google Docs, and Zoom
@@ -70,15 +71,18 @@ make cluster    # Generate insights
 ## 📊 What You'll See
 
 ### Frontend Web UI (http://localhost:3000) ⭐ NEW
+
 The complete visual interface for product managers:
 
 **Main Dashboard**:
+
 - **Themes Board**: Interactive cards showing top themes ranked by priority score (0-100)
 - **Filters**: By severity (Critical/High/Medium/Low), customer segment (Enterprise/Mid-Market/SMB), effort (High/Medium/Low)
 - **Priority Range Slider**: Filter themes by score range
 - **Customer Search**: Find themes affecting specific customers
 
 **Theme Detail View**:
+
 - Priority score breakdown with visual indicators
 - Full description and impact analysis
 - Affected customers list with ACV, segment, and feedback counts
@@ -86,16 +90,19 @@ The complete visual interface for product managers:
 - Recommended next steps
 
 **Integrations Page**:
+
 - OAuth setup for Slack, Google Drive, Zoom
 - Connection status and sync history
 - One-click connect buttons
 
 **Upload Page**:
+
 - CSV file upload with drag-and-drop
 - Template download
 - Bulk feedback import
 
 **Competitive Intelligence**:
+
 - Competitor analysis dashboard
 - Feature gap identification
 - Market positioning insights
@@ -103,11 +110,13 @@ The complete visual interface for product managers:
 **Built with**: Next.js 14 (App Router), TypeScript, Tailwind CSS, SWR
 
 ### Chrome Extension (Jira Side-Panel)
+
 - Shows ThemeScore and top quotes when viewing a Jira ticket
 - "Copy PRD outline" button generates markdown with citations
 - Build: `make extension-build`, then load `apps/extension/dist` in Chrome
 
 ### Backend API (http://localhost:8000/docs)
+
 - Interactive Swagger docs (OpenAPI 3.0)
 - Try `/themes`, `/search`, `/feedback`
 - 50+ REST endpoints for all operations
@@ -200,6 +209,7 @@ produckai/  (this repository - complete monorepo)
 ```
 
 **What's included in this repo:**
+
 - ✅ **Complete Backend** - FastAPI + Postgres + Redis + Celery
 - ✅ **Complete Frontend** - Next.js Web UI (4,171 lines of TypeScript/TSX)
 - ✅ **Chrome Extension** - Jira integration
@@ -235,35 +245,38 @@ ThemeScore =
 **Default weights**: {frequency: 0.35, acv: 0.30, sentiment: 0.10, segment: 0.15, trend: 0.10, duplicate: 0.10}
 
 Adjust weights via:
+
 - Web UI sliders (preview mode)
 - API: `POST /admin/weights`
 - Environment variables
 
 ## 📡 API Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/healthz` | GET | Health check |
-| `/themes` | GET | List themes (filterable, sortable) |
-| `/themes/{id}` | GET | Theme detail with quotes |
-| `/search` | GET | Search feedback and themes |
-| `/cluster/run` | POST | Trigger clustering pipeline |
-| `/tickets/{key}/score` | GET | Jira ticket ThemeScore |
-| `/tickets/{key}/draft_prd` | POST | Generate PRD outline |
-| `/ingest/slack` | POST | Ingest Slack data (demo/live) |
-| `/ingest/jira` | POST | Ingest Jira data (demo/live) |
-| `/ingest/gdocs` | POST | Ingest Google Docs (demo/live) |
-| `/ingest/zoom` | POST | Ingest Zoom transcripts (demo/live) |
-| `/ingest/sources/summary` | GET | Summary of feedback by source |
-| `/admin/config` | GET | Current scoring weights |
-| `/admin/weights` | POST | Update scoring weights |
+| Endpoint                   | Method | Description                         |
+| -------------------------- | ------ | ----------------------------------- |
+| `/healthz`                 | GET    | Health check                        |
+| `/themes`                  | GET    | List themes (filterable, sortable)  |
+| `/themes/{id}`             | GET    | Theme detail with quotes            |
+| `/search`                  | GET    | Search feedback and themes          |
+| `/cluster/run`             | POST   | Trigger clustering pipeline         |
+| `/tickets/{key}/score`     | GET    | Jira ticket ThemeScore              |
+| `/tickets/{key}/draft_prd` | POST   | Generate PRD outline                |
+| `/ingest/slack`            | POST   | Ingest Slack data (demo/live)       |
+| `/ingest/jira`             | POST   | Ingest Jira data (demo/live)        |
+| `/ingest/gdocs`            | POST   | Ingest Google Docs (demo/live)      |
+| `/ingest/zoom`             | POST   | Ingest Zoom transcripts (demo/live) |
+| `/ingest/sources/summary`  | GET    | Summary of feedback by source       |
+| `/admin/config`            | GET    | Current scoring weights             |
+| `/admin/weights`           | POST   | Update scoring weights              |
 
 Full docs: http://localhost:8000/docs
 
 ## 🔌 Connectors
 
 ### Demo Mode (Default)
+
 Uses sample files in `/samples/`:
+
 - `samples/slack/*.jsonl` - Fake Slack messages
 - `samples/jira/*.json` - Fake Jira issues
 - `samples/gdocs/*.md` - Sample Google Docs (markdown)
@@ -274,6 +287,7 @@ No API keys needed. Runs fully offline.
 ### Live Mode
 
 #### Slack
+
 1. Create a Slack app at https://api.slack.com/apps
 2. Add scopes: `channels:history`, `channels:read`, `users:read`
 3. Install to workspace, copy Bot Token
@@ -286,6 +300,7 @@ No API keys needed. Runs fully offline.
 5. Run: `make ingest-slack`
 
 #### Jira
+
 1. Generate API token at https://id.atlassian.com/manage-profile/security/api-tokens
 2. Update `.env`:
    ```
@@ -298,15 +313,18 @@ No API keys needed. Runs fully offline.
 3. Run: `make ingest-jira`
 
 #### Google Docs
+
 Ingest product specs, PRDs, and other documents stored in Google Drive.
 
 **Features**:
+
 - Chunks documents by headings and token windows (~500 tokens with 50 token overlap)
 - Preserves heading structure for better context
 - PII redaction (emails, phones, URLs)
 - Maps documents to accounts via owner email domain
 
 **Live Mode Setup**:
+
 1. Create a Google Cloud project at https://console.cloud.google.com
 2. Enable Google Drive API and Google Docs API
 3. Create OAuth 2.0 credentials (Desktop app)
@@ -332,15 +350,18 @@ Ingest product specs, PRDs, and other documents stored in Google Drive.
    ```
 
 **Demo Mode**:
+
 ```bash
 # Demo mode automatically ingests from samples/gdocs/*.md
 make seed  # Includes Google Docs
 ```
 
 #### Zoom
+
 Ingest customer call transcripts and meeting recordings from Zoom Cloud.
 
 **Features**:
+
 - Parses VTT transcripts with speaker diarization
 - Chunks by time (60-120s segments)
 - Extracts speaker tags and timestamps
@@ -349,6 +370,7 @@ Ingest customer call transcripts and meeting recordings from Zoom Cloud.
 - Maps meetings to accounts via participant email domains
 
 **Live Mode Setup**:
+
 1. Create a Zoom Server-to-Server OAuth app at https://marketplace.zoom.us/develop/create
 2. Add scope: `recording:read:admin` (or `recording:read` for user-level)
 3. Activate the app and get credentials
@@ -369,6 +391,7 @@ Ingest customer call transcripts and meeting recordings from Zoom Cloud.
    ```
 
 **Demo Mode**:
+
 ```bash
 # Demo mode automatically ingests from samples/zoom/*.vtt
 make seed  # Includes Zoom transcripts
@@ -377,6 +400,7 @@ make seed  # Includes Zoom transcripts
 **Note**: Zoom transcripts must be enabled in your Zoom account settings (Account > Settings > Recording > Cloud recording > Advanced cloud recording settings > Audio transcript).
 
 #### Linear (Stub)
+
 Coming in v2. Client interface exists at `apps/api/connectors/linear.py`.
 
 ## 🧪 Testing
@@ -436,6 +460,7 @@ make migrate-down
 ## 🚢 Deployment (Future)
 
 For production:
+
 1. Use managed Postgres (AWS RDS, Supabase, Neon)
 2. Enable pgvector extension
 3. Use managed Redis (ElastiCache, Upstash)
@@ -468,6 +493,7 @@ make test
 ## 🐛 Troubleshooting
 
 **Services won't start?**
+
 ```bash
 make clean
 make build
@@ -475,6 +501,7 @@ make up
 ```
 
 **Database errors?**
+
 ```bash
 make shell-db
 # Check tables: \dt
@@ -482,10 +509,12 @@ make shell-db
 ```
 
 **Clustering not working?**
+
 - Ensure at least 20 feedback items exist (check `CLUSTERING_MIN_FEEDBACK_COUNT`)
 - Check worker logs: `make logs-worker`
 
 **Port conflicts?**
+
 - Edit `docker-compose.yml` to change port mappings
 
 ## 📚 Additional Resources
@@ -497,15 +526,18 @@ make shell-db
 ## 📧 Contact & Community
 
 ### Get in Touch
+
 - **Creator**: Rohit Saraf ([rohitsaraff33@gmail.com](mailto:rohitsaraff33@gmail.com))
 - **GitHub Repository**: https://github.com/rohitsaraff33-bit/produckai-release-v1.0.0
 - **GitHub Issues**: https://github.com/rohitsaraff33-bit/produckai-release-v1.0.0/issues
 - **GitHub Discussions**: https://github.com/rohitsaraff33-bit/produckai-release-v1.0.0/discussions
 
 ### Vision & Community
+
 This project was built **for product managers, by product managers**. The goal is to create a thriving open source community where builders enhance integrations, improve clustering algorithms, and share learnings so the entire PM community benefits.
 
 **We especially welcome contributions in:**
+
 - 🔌 **Integration enhancements** - New data sources (Linear, Notion, Intercom, Zendesk)
 - 🧠 **ML & Clustering** - Alternative algorithms, multi-language models, sentiment analysis
 - 📊 **Analytics & Scoring** - New VOC dimensions, custom formulas, trend detection
@@ -534,6 +566,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines.
 ## 🔐 Security
 
 We take security seriously. If you discover a security vulnerability:
+
 - **DO NOT** open a public issue
 - Email [rohitsaraff33@gmail.com](mailto:rohitsaraff33@gmail.com) with details
 - See [SECURITY.md](SECURITY.md) for our security policy and responsible disclosure process
@@ -567,6 +600,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 ## 🙏 Acknowledgments
 
 Built with these amazing open source projects:
+
 - [FastAPI](https://fastapi.tiangolo.com/) - Modern Python web framework
 - [Sentence Transformers](https://www.sbert.net/) - State-of-the-art sentence embeddings
 - [PostgreSQL](https://www.postgresql.org/) + [pgvector](https://github.com/pgvector/pgvector) - Vector similarity search

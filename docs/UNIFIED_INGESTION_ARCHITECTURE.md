@@ -5,6 +5,7 @@
 We've implemented a unified feedback ingestion service that standardizes data extraction across all sources (Slack, Jira, Zoom, Google Drive, and future CRM integrations).
 
 This solves critical issues with the previous approach:
+
 - ❌ **Before**: Each source had custom logic, customer extraction was fragile and inconsistent
 - ✅ **After**: Single pipeline, standardized extraction, automatic chunking and embedding generation
 
@@ -41,6 +42,7 @@ This solves critical issues with the previous approach:
 ### 1. Base Classes (`apps/api/services/ingestion/base.py`)
 
 **ContentChunk**
+
 ```python
 @dataclass
 class ContentChunk:
@@ -50,6 +52,7 @@ class ContentChunk:
 ```
 
 **CustomerInfo**
+
 ```python
 @dataclass
 class CustomerInfo:
@@ -60,6 +63,7 @@ class CustomerInfo:
 ```
 
 **ContentExtractor (Abstract Base Class)**
+
 ```python
 class ContentExtractor(ABC):
     @abstractmethod
@@ -106,6 +110,7 @@ feedback_items, stats = service.ingest_batch(
 ```
 
 **What It Does:**
+
 1. ✅ Validates content structure
 2. ✅ Extracts and normalizes customer name
 3. ✅ Chunks long content (transcripts, documents)
@@ -119,11 +124,13 @@ feedback_items, stats = service.ingest_batch(
 #### **GDriveExtractor** (`apps/api/services/ingestion/extractors/gdrive.py`)
 
 **Customer Extraction Strategy:**
+
 1. Pattern matching: "their customer X", "customer X"
 2. Participant info: "Name (Company - Title)"
 3. Fallback: Google Drive owner email
 
 **Chunking Strategy:**
+
 - Transcripts (VTT format): Extract individual speaker statements with feedback keywords
 - Documents: Return as single chunk
 - Threshold: 2000+ characters
@@ -133,10 +140,12 @@ feedback_items, stats = service.ingest_batch(
 #### **ZoomExtractor** (`apps/api/services/ingestion/extractors/zoom.py`)
 
 **Customer Extraction:**
+
 1. Meeting topic parsing (e.g., "Customer Call - Acme Corp")
 2. Fallback: Host email prefix
 
 **Chunking:**
+
 - Currently returns whole transcript
 - TODO: Implement VTT parsing (same as GDrive)
 
@@ -145,10 +154,12 @@ feedback_items, stats = service.ingest_batch(
 #### **SlackExtractor** (`apps/api/services/ingestion/extractors/slack.py`)
 
 **Customer Extraction:**
+
 1. Channel name patterns (e.g., "customer-acme-corp")
 2. Fallback: "Demo" for internal channels
 
 **Chunking:**
+
 - Slack messages are typically short, no chunking needed
 - Only chunks if > 2000 characters
 
@@ -157,11 +168,13 @@ feedback_items, stats = service.ingest_batch(
 #### **JiraExtractor** (`apps/api/services/ingestion/extractors/jira.py`)
 
 **Customer Extraction:**
+
 1. Custom fields (Account, Organization, Customer)
 2. Reporter email domain
 3. Project name fallback
 
 **Chunking:**
+
 - Combines summary + description
 - TODO: Include comments as separate chunks
 
@@ -172,6 +185,7 @@ feedback_items, stats = service.ingest_batch(
 ### Refactoring Existing Google Drive Sync
 
 **Before:**
+
 ```python
 # google_client.py - Mixed concerns, brittle regex
 async def sync_google_docs(db: Session, folder_ids: list[str]):
@@ -191,6 +205,7 @@ async def sync_google_docs(db: Session, folder_ids: list[str]):
 ```
 
 **After:**
+
 ```python
 # Using unified ingestion service
 from apps.api.services.ingestion import FeedbackIngestionService
@@ -231,26 +246,31 @@ async def sync_google_docs(db: Session, folder_ids: list[str]):
 ## Benefits
 
 ### 1. **Consistency**
+
 - All sources use same pipeline
 - Customer extraction follows same patterns
 - Embeddings always generated immediately
 
 ### 2. **Maintainability**
+
 - Source-specific logic isolated in extractors
 - Easy to add new sources (just implement `ContentExtractor`)
 - Common functionality in one place (embedding, normalization)
 
 ### 3. **Quality**
+
 - Confidence scores track extraction reliability
 - Statistics help monitor data quality
 - Warnings surface issues automatically
 
 ### 4. **Performance**
+
 - Batch embedding generation (faster than one-by-one)
 - Reuses existing feedback records (upsert logic)
 - Lazy-loads embedding model
 
 ### 5. **Flexibility**
+
 - Can swap extractors (e.g., regex → LLM)
 - Can add preprocessing steps
 - Can customize chunking per source
@@ -261,17 +281,17 @@ async def sync_google_docs(db: Session, folder_ids: list[str]):
 
 Each extractor tries multiple strategies in order of reliability:
 
-| Method | Confidence | Use Case |
-|--------|-----------|----------|
-| `structured_field` | 0.9 | Jira custom fields, CRM data |
-| `regex_pattern` | 0.8 | "customer Acme Corp" in text |
-| `regex_participant` | 0.7 | Transcript participant info |
-| `channel_name` | 0.7 | Slack channel patterns |
-| `meeting_topic` | 0.6 | Zoom meeting topic |
-| `reporter_domain` | 0.5 | Email domain extraction |
-| `project_name` | 0.4 | Jira project fallback |
-| `fallback_owner` | 0.3 | File owner email |
-| `fallback_unknown` | 0.1 | No extraction possible |
+| Method              | Confidence | Use Case                     |
+| ------------------- | ---------- | ---------------------------- |
+| `structured_field`  | 0.9        | Jira custom fields, CRM data |
+| `regex_pattern`     | 0.8        | "customer Acme Corp" in text |
+| `regex_participant` | 0.7        | Transcript participant info  |
+| `channel_name`      | 0.7        | Slack channel patterns       |
+| `meeting_topic`     | 0.6        | Zoom meeting topic           |
+| `reporter_domain`   | 0.5        | Email domain extraction      |
+| `project_name`      | 0.4        | Jira project fallback        |
+| `fallback_owner`    | 0.3        | File owner email             |
+| `fallback_unknown`  | 0.1        | No extraction possible       |
 
 ### Monitoring Low-Confidence Extractions
 
@@ -312,6 +332,7 @@ if stats.warnings:
 ### Phase 2: Enhanced Extraction 🚀
 
 1. **LLM-Based Extraction** (Recommended!)
+
    ```python
    class LLMExtractor(ContentExtractor):
        """Use Claude/GPT for intelligent extraction."""
@@ -445,6 +466,7 @@ A: Yes! Override `chunk_content()` and `should_chunk()` in your extractor.
 ## Summary
 
 ✅ **Implemented:**
+
 - Unified ingestion pipeline
 - 4 source extractors (GDrive fully functional, others basic)
 - Automatic embedding generation
@@ -454,12 +476,14 @@ A: Yes! Override `chunk_content()` and `should_chunk()` in your extractor.
 - Error handling & statistics
 
 ⏳ **Next Steps:**
+
 - Refactor existing source sync code
 - Enhance Zoom/Slack/Jira extractors
 - Add LLM-based extraction
 - Build customer entity resolution
 
 🎯 **Impact:**
+
 - Consistent customer extraction across all sources
 - Automatic transcript chunking (no manual scripts!)
 - Better data quality with confidence tracking

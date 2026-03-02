@@ -19,12 +19,14 @@ This guide covers deploying ProduckAI to production for PM feedback.
    - Sign up with GitHub
 
 2. **Install Railway CLI**
+
    ```bash
    npm install -g @railway/cli
    railway login
    ```
 
 3. **Create New Project**
+
    ```bash
    cd /Users/rohitsaraf/claude-code/produckai
    railway init
@@ -33,6 +35,7 @@ This guide covers deploying ProduckAI to production for PM feedback.
    ```
 
 4. **Add Database Services**
+
    ```bash
    # Add PostgreSQL with pgvector
    railway add postgresql
@@ -54,6 +57,7 @@ This guide covers deploying ProduckAI to production for PM feedback.
      ```
 
 6. **Deploy API**
+
    ```bash
    # Railway will auto-detect Dockerfile
    railway up
@@ -64,6 +68,7 @@ This guide covers deploying ProduckAI to production for PM feedback.
    ```
 
 7. **Run Database Migrations**
+
    ```bash
    railway run alembic upgrade head
    ```
@@ -165,6 +170,7 @@ This guide covers deploying ProduckAI to production for PM feedback.
 Vercel is optimized for Next.js but requires serverless backend approach.
 
 1. **Deploy Frontend to Vercel**
+
    ```bash
    npm install -g vercel
    cd apps/web
@@ -192,15 +198,18 @@ Vercel is optimized for Next.js but requires serverless backend approach.
 ## Cost Estimates
 
 ### Railway (Recommended)
+
 - **Free tier**: $5 credit/month (sufficient for testing)
 - **Hobby**: $5-20/month for production
 - **PostgreSQL + Redis**: Included in credit
 
 ### Netlify
+
 - **Free tier**: 100GB bandwidth, 300 build minutes/month
 - **Pro**: $19/month (if you need more)
 
 ### Total for Testing: **$0-5/month**
+
 ### Total for Production: **$20-40/month**
 
 ---
@@ -208,16 +217,19 @@ Vercel is optimized for Next.js but requires serverless backend approach.
 ## Troubleshooting
 
 ### Frontend can't reach API
+
 - Check `NEXT_PUBLIC_API_URL` is set correctly
 - Check CORS settings in backend include frontend URL
 - Check browser console for errors
 
 ### Database connection fails
+
 - Verify `DATABASE_URL` format
 - Ensure PostgreSQL has pgvector extension
 - Run migrations: `railway run alembic upgrade head`
 
 ### No insights showing
+
 - Run clustering script: `railway run python apps/api/scripts/run_clustering.py`
 - Check API logs for errors
 

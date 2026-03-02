@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "prettier --write \"$CLAUDE_TOOL_RESPONSE_FILEPATH\" 2>/dev/null || true"
+          },
+          {
+            "type": "command",
+            "command": "echo \"$(date '+%Y-%m-%d %H:%M:%S') $CLAUDE_TOOL_RESPONSE_FILEPATH\" >> .claude-log.txt"
+          }
+        ]
+      }
+    ]
+  }
+}

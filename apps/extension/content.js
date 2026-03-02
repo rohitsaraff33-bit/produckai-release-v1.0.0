@@ -1,9 +1,9 @@
 // Content script for Jira pages
-console.log('ProduckAI extension loaded on Jira page');
+console.log("ProduckAI extension loaded on Jira page");
 
 // Add a visual indicator that the extension is active
-const indicator = document.createElement('div');
-indicator.innerHTML = '🦆 ProduckAI Active';
+const indicator = document.createElement("div");
+indicator.innerHTML = "🦆 ProduckAI Active";
 indicator.style.cssText = `
   position: fixed;
   bottom: 20px;
@@ -21,7 +21,7 @@ document.body.appendChild(indicator);
 
 // Remove indicator after 3 seconds
 setTimeout(() => {
-  indicator.style.transition = 'opacity 0.5s';
-  indicator.style.opacity = '0';
+  indicator.style.transition = "opacity 0.5s";
+  indicator.style.opacity = "0";
   setTimeout(() => indicator.remove(), 500);
 }, 3000);

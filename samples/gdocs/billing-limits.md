@@ -36,12 +36,15 @@ Dashboard lacks key information:
 ## Customer Feedback Summary
 
 **SmallBiz LLC** (SMB, $8K ACV):
+
 > "We got hit with a $400 overage charge last month. Had no idea we were over our API limit until the bill came. Almost canceled our account."
 
 **TechStart Inc** (MM, $45K ACV):
+
 > "We need something between 5 and 25 users. We have 12 people who need access but can't justify Pro pricing for features we don't use."
 
 **Acme Corp** (ENT, $120K ACV):
+
 > "Our team leads need visibility into usage by department for budget allocation. Current dashboard shows nothing."
 
 ## Proposed Solutions
@@ -103,7 +106,7 @@ Give customers more control:
 - Reduce billing-related support tickets by 50%
 - Decrease churn from billing issues by 30%
 - Increase upgrade rate by showing value of higher tiers
-- >80% of customers opt-in to usage alerts
+- > 80% of customers opt-in to usage alerts
 
 ## Timeline
 

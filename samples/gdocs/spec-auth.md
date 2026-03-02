@@ -81,11 +81,13 @@ Compliance requirement for Enterprise customers:
 ## Technical Approach
 
 ### Phase 1 (Q1)
+
 - Implement SAML 2.0 SP
 - Add TOTP MFA
 - Basic RBAC with 4 predefined roles
 
 ### Phase 2 (Q2)
+
 - OAuth/OIDC providers
 - Custom roles for Enterprise
 - Enhanced audit logging

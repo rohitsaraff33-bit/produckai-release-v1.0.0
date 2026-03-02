@@ -256,48 +256,24 @@ class VOCScoringService:
         else:
             recommended_priority = "low"
 
-        # Upsert VOC score
-        existing_score = (
-            db.query(VOCScore)
-            .filter(VOCScore.ticket_id == ticket.id)
-            .first()
+        score = self._upsert_voc_score(
+            db,
+            ticket,
+            {
+                "customer_count": customer_count,
+                "total_acv": total_acv,
+                "feedback_volume": feedback_volume,
+                "ent_customer_count": ent_count,
+                "mm_customer_count": mm_count,
+                "smb_customer_count": smb_count,
+                "customer_score": customer_score,
+                "acv_score": acv_score,
+                "segment_score": segment_score,
+                "volume_score": volume_score,
+                "voc_score": voc_score,
+                "recommended_priority": recommended_priority,
+            },
         )
-
-        if existing_score:
-            # Update existing score
-            existing_score.customer_count = customer_count
-            existing_score.total_acv = total_acv
-            existing_score.feedback_volume = feedback_volume
-            existing_score.ent_customer_count = ent_count
-            existing_score.mm_customer_count = mm_count
-            existing_score.smb_customer_count = smb_count
-            existing_score.customer_score = customer_score
-            existing_score.acv_score = acv_score
-            existing_score.segment_score = segment_score
-            existing_score.volume_score = volume_score
-            existing_score.voc_score = voc_score
-            existing_score.recommended_priority = recommended_priority
-            score = existing_score
-        else:
-            # Create new score
-            score = VOCScore(
-                ticket_id=ticket.id,
-                customer_count=customer_count,
-                total_acv=total_acv,
-                feedback_volume=feedback_volume,
-                ent_customer_count=ent_count,
-                mm_customer_count=mm_count,
-                smb_customer_count=smb_count,
-                customer_score=customer_score,
-                acv_score=acv_score,
-                segment_score=segment_score,
-                volume_score=volume_score,
-                voc_score=voc_score,
-                recommended_priority=recommended_priority,
-            )
-            db.add(score)
-
-        db.flush()
 
         logger.info(
             f"Calculated VOC score for {ticket.jira_key}: "
@@ -309,45 +285,39 @@ class VOCScoringService:
 
     def _create_zero_score(self, db: Session, ticket: JiraTicket) -> VOCScore:
         """Create a zero VOC score for tickets with no matches."""
-        existing_score = (
-            db.query(VOCScore)
-            .filter(VOCScore.ticket_id == ticket.id)
-            .first()
+        return self._upsert_voc_score(
+            db,
+            ticket,
+            {
+                "customer_count": 0,
+                "total_acv": 0.0,
+                "feedback_volume": 0,
+                "ent_customer_count": 0,
+                "mm_customer_count": 0,
+                "smb_customer_count": 0,
+                "customer_score": 0.0,
+                "acv_score": 0.0,
+                "segment_score": 0.0,
+                "volume_score": 0.0,
+                "voc_score": 0.0,
+                "recommended_priority": "low",
+            },
         )
 
-        if existing_score:
-            # Update to zeros
-            existing_score.customer_count = 0
-            existing_score.total_acv = 0.0
-            existing_score.feedback_volume = 0
-            existing_score.ent_customer_count = 0
-            existing_score.mm_customer_count = 0
-            existing_score.smb_customer_count = 0
-            existing_score.customer_score = 0.0
-            existing_score.acv_score = 0.0
-            existing_score.segment_score = 0.0
-            existing_score.volume_score = 0.0
-            existing_score.voc_score = 0.0
-            existing_score.recommended_priority = "low"
-            score = existing_score
+    def _upsert_voc_score(
+        self, db: Session, ticket: JiraTicket, fields: dict
+    ) -> VOCScore:
+        """Insert or update a VOCScore row for *ticket* with the given *fields*."""
+        existing = (
+            db.query(VOCScore).filter(VOCScore.ticket_id == ticket.id).first()
+        )
+        if existing:
+            for key, value in fields.items():
+                setattr(existing, key, value)
+            score = existing
         else:
-            score = VOCScore(
-                ticket_id=ticket.id,
-                customer_count=0,
-                total_acv=0.0,
-                feedback_volume=0,
-                ent_customer_count=0,
-                mm_customer_count=0,
-                smb_customer_count=0,
-                customer_score=0.0,
-                acv_score=0.0,
-                segment_score=0.0,
-                volume_score=0.0,
-                voc_score=0.0,
-                recommended_priority="low",
-            )
+            score = VOCScore(ticket_id=ticket.id, **fields)
             db.add(score)
-
         db.flush()
         return score
 

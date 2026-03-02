@@ -17,18 +17,19 @@ Before you begin testing:
 - ✅ **ProduckAI Backend running** (see Part 0 below)
 
 **Optional for integration testing:**
+
 - Slack workspace admin access
 - Google Cloud project access
 - JIRA account with admin rights
 - Zoom account with recording access
 
-**⚠️  IMPORTANT:** The MCP server requires the ProduckAI backend API to be running at http://localhost:8000. See Part 0 for setup instructions.
+**⚠️ IMPORTANT:** The MCP server requires the ProduckAI backend API to be running at http://localhost:8000. See Part 0 for setup instructions.
 
 ---
 
 ## Part 0: Backend Setup (10 minutes)
 
-**⚠️  CRITICAL:** The MCP server calls the ProduckAI backend API. You MUST have the backend running before testing.
+**⚠️ CRITICAL:** The MCP server calls the ProduckAI backend API. You MUST have the backend running before testing.
 
 ### Step 1: Start the Backend
 
@@ -77,6 +78,7 @@ If you see this response, the backend is ready! ✅
 **Problem:** "connection refused" when testing curl
 
 **Solution:**
+
 ```bash
 # Check if backend is actually running
 lsof -i :8000
@@ -91,12 +93,14 @@ lsof -i :8000
 **Problem:** "database disconnected" in health check
 
 **Solution:**
+
 ```bash
 # Backend needs PostgreSQL (or SQLite for testing)
 # Check backend configuration in apps/api/config.py
 ```
 
 **✅ Backend Setup COMPLETE if:**
+
 - Backend is running on http://localhost:8000
 - Health check returns {"status":"ok"}
 - Terminal shows "Application startup complete"
@@ -110,6 +114,7 @@ lsof -i :8000
 ### Step 1: Prepare Clean Environment
 
 **macOS/Linux:**
+
 ```bash
 # Open Terminal
 # Navigate to a test directory (NOT the development directory)
@@ -123,6 +128,7 @@ python3 --version
 ```
 
 **Windows:**
+
 ```powershell
 # Open PowerShell or Command Prompt
 # Navigate to a test directory
@@ -138,6 +144,7 @@ python --version
 ### Step 2: Create Virtual Environment
 
 **macOS/Linux:**
+
 ```bash
 # Create virtual environment
 python3 -m venv test-venv
@@ -151,6 +158,7 @@ which python
 ```
 
 **Windows:**
+
 ```powershell
 # Create virtual environment
 python -m venv test-venv
@@ -165,9 +173,10 @@ where python
 
 ### Step 3: Get the Source Code
 
-**⚠️  CRITICAL:** You need the source code to install the MCP server (not yet on PyPI).
+**⚠️ CRITICAL:** You need the source code to install the MCP server (not yet on PyPI).
 
 **Option A: Clone from GitHub (Recommended for testers)**
+
 ```bash
 # Return to test directory
 cd ~/Desktop/produckai-test
@@ -181,6 +190,7 @@ cp -r /path/to/produckai-mcp-server ./produckai-mcp-server
 ```
 
 **Option B: Use existing local source (For internal testing)**
+
 ```bash
 # If you already have the source code locally:
 # Copy it to your test directory
@@ -209,12 +219,13 @@ pip install -e ".[dev]"
 ```
 
 **Expected output:**
+
 ```
 Successfully installed produckai-mcp-server-0.7.0
 + 50+ other packages
 ```
 
-**⚠️  Common Mistake:** Don't install from the development directory! Always install from the test directory to simulate a real user installation.
+**⚠️ Common Mistake:** Don't install from the development directory! Always install from the test directory to simulate a real user installation.
 
 ### Step 5: Verify Installation
 
@@ -238,6 +249,7 @@ python -c "import produckai_mcp; print(produckai_mcp.__version__)"
 ```
 
 **✅ Installation Test PASSED if:**
+
 - Command `produckai-mcp` is found
 - Version shows 0.7.0
 - Python import works
@@ -248,6 +260,7 @@ python -c "import produckai_mcp; print(produckai_mcp.__version__)"
 Before proceeding to Part 2, verify your setup matches this checklist:
 
 **Directory Structure:**
+
 ```
 ~/Desktop/produckai-test/
 ├── produckai-mcp-server/          # Source code
@@ -263,6 +276,7 @@ Before proceeding to Part 2, verify your setup matches this checklist:
 ```
 
 **Quick Verification Commands:**
+
 ```bash
 # 1. Are you in the right directory?
 pwd
@@ -284,7 +298,8 @@ produckai-mcp --version
 # NOT: "command not found"
 ```
 
-**⚠️  STOP and troubleshoot if ANY of these fail:**
+**⚠️ STOP and troubleshoot if ANY of these fail:**
+
 - ❌ Wrong directory → `cd ~/Desktop/produckai-test`
 - ❌ Venv not activated → `source test-venv/bin/activate`
 - ❌ Command doesn't exist → Reinstall: `pip install -e "./produckai-mcp-server[dev]"`
@@ -299,6 +314,7 @@ produckai-mcp --version
 ### Step 1: Locate Claude Desktop Config
 
 **macOS:**
+
 ```bash
 # Check if config exists
 ls -la ~/Library/Application\ Support/Claude/claude_desktop_config.json
@@ -311,6 +327,7 @@ open ~/Library/Application\ Support/Claude/claude_desktop_config.json
 ```
 
 **Linux:**
+
 ```bash
 # Check if config exists
 ls -la ~/.config/Claude/claude_desktop_config.json
@@ -323,6 +340,7 @@ nano ~/.config/Claude/claude_desktop_config.json
 ```
 
 **Windows:**
+
 ```powershell
 # Check if config exists
 dir $env:APPDATA\Claude\claude_desktop_config.json
@@ -336,7 +354,7 @@ notepad $env:APPDATA\Claude\claude_desktop_config.json
 
 ### Step 2: Verify Command Path (CRITICAL!)
 
-**⚠️  DO THIS FIRST:** Verify the command exists before adding to config!
+**⚠️ DO THIS FIRST:** Verify the command exists before adding to config!
 
 ```bash
 # Make sure you're in your test directory with venv activated
@@ -355,6 +373,7 @@ ls -la $(which produckai-mcp)
 ```
 
 **Windows:**
+
 ```powershell
 cd Desktop\produckai-test
 test-venv\Scripts\activate
@@ -369,7 +388,8 @@ where produckai-mcp
 dir (where produckai-mcp)
 ```
 
-**⚠️  STOP HERE if:**
+**⚠️ STOP HERE if:**
+
 - Command not found → Go back to Part 1, Step 4 (Install the package)
 - Path doesn't show test-venv → Wrong venv is activated
 - File doesn't exist → Installation failed
@@ -381,6 +401,7 @@ dir (where produckai-mcp)
 **IMPORTANT:** Use the EXACT FULL PATH from Step 2 above.
 
 **macOS/Linux example:**
+
 ```json
 {
   "mcpServers": {
@@ -396,6 +417,7 @@ dir (where produckai-mcp)
 ```
 
 **Windows example:**
+
 ```json
 {
   "mcpServers": {
@@ -410,7 +432,8 @@ dir (where produckai-mcp)
 }
 ```
 
-**⚠️  CRITICAL MISTAKES TO AVOID:**
+**⚠️ CRITICAL MISTAKES TO AVOID:**
+
 - ❌ Don't use relative paths (e.g., `./test-venv/bin/produckai-mcp`)
 - ❌ Don't copy example paths - use YOUR actual path from Step 2!
 - ❌ Don't forget to replace `yourusername` with your actual username
@@ -432,6 +455,7 @@ python -m json.tool < $env:APPDATA\Claude\claude_desktop_config.json
 ```
 
 **Extra Verification: Check the command path exists**
+
 ```bash
 # macOS/Linux - verify path from config actually exists
 ls -la /Users/yourusername/Desktop/produckai-test/test-venv/bin/produckai-mcp
@@ -441,7 +465,8 @@ ls -la /Users/yourusername/Desktop/produckai-test/test-venv/bin/produckai-mcp
 dir C:\Users\YourName\Desktop\produckai-test\test-venv\Scripts\produckai-mcp.exe
 ```
 
-**⚠️  If you get "No such file or directory":**
+**⚠️ If you get "No such file or directory":**
+
 - Your config has the WRONG path
 - Go back to Step 2 and get the correct path
 - This is the #1 cause of "Could not connect to MCP server" errors!
@@ -449,6 +474,7 @@ dir C:\Users\YourName\Desktop\produckai-test\test-venv\Scripts\produckai-mcp.exe
 ### Step 5: Restart Claude Desktop
 
 **macOS:**
+
 ```bash
 # Completely quit Claude Desktop (Cmd+Q or right-click dock icon → Quit)
 # Do NOT just close the window
@@ -457,6 +483,7 @@ dir C:\Users\YourName\Desktop\produckai-test\test-venv\Scripts\produckai-mcp.exe
 ```
 
 **Linux:**
+
 ```bash
 # Kill Claude process
 pkill -9 claude
@@ -465,6 +492,7 @@ pkill -9 claude
 ```
 
 **Windows:**
+
 ```powershell
 # Close Claude Desktop completely
 # Right-click taskbar icon → Close window
@@ -481,11 +509,13 @@ Open Claude Desktop and type:
 ```
 
 **Expected Response:**
+
 - Claude should show a list of tools
 - You should see mentions of: upload_csv_feedback, run_clustering, calculate_voc_scores, generate_prd
 - Tool count should be around 50 tools
 
 **✅ Configuration Test PASSED if:**
+
 - Claude Desktop shows ProduckAI tools
 - No error messages about MCP server
 - Tools are accessible
@@ -494,7 +524,7 @@ Open Claude Desktop and type:
 
 ## Part 3: Basic Functionality Test (15 minutes)
 
-**⚠️  PREREQUISITE:** Ensure the backend is running (see Part 0). The MCP server will fail if the backend is not accessible.
+**⚠️ PREREQUISITE:** Ensure the backend is running (see Part 0). The MCP server will fail if the backend is not accessible.
 
 ### Test 1: Demo Data Workflow
 
@@ -507,6 +537,7 @@ In Claude Desktop, first verify the MCP server can reach the backend:
 ```
 
 **Expected Response:**
+
 - Should confirm backend is accessible
 - May show backend status and version
 
@@ -529,11 +560,13 @@ ls -la demo-data/
 **Step 3: Upload demo feedback**
 
 In Claude Desktop:
+
 ```
 "Upload the demo feedback CSV at ~/Desktop/produckai-test/demo-data/feedback.csv"
 ```
 
 **Expected Response:**
+
 - Claude should confirm upload
 - Should show: "Successfully uploaded X feedback items" or "Successfully processed X file(s)"
 - Number should be around 50 items
@@ -544,11 +577,13 @@ In Claude Desktop:
 **Step 4: Run clustering**
 
 In Claude Desktop:
+
 ```
 "Run clustering on the feedback to identify themes"
 ```
 
 **Expected Response:**
+
 - Should take 1-2 minutes
 - Should show: "Clustering completed" or "Clustering task started"
 - Should show: X themes identified
@@ -560,11 +595,13 @@ In Claude Desktop:
 **Step 5: View themes**
 
 In Claude Desktop:
+
 ```
 "Show me the top 5 themes by feedback count"
 ```
 
 **Expected Response:**
+
 - List of 5 insights (backend calls them insights, but MCP may present as themes)
 - Each with: title, feedback count, description, priority score
 - Insights should make sense (API features, UI improvements, etc.)
@@ -574,11 +611,13 @@ In Claude Desktop:
 **Step 6: Calculate VOC scores**
 
 In Claude Desktop:
+
 ```
 "Calculate VOC scores for all insights"
 ```
 
 **Expected Response:**
+
 - Should complete in < 30 seconds
 - Should show: "VOC scores calculated for X insights" or similar success message
 - Scores should be 0-100 scale
@@ -587,11 +626,13 @@ In Claude Desktop:
 **Step 7: Get top priorities**
 
 In Claude Desktop:
+
 ```
 "Show me the top 5 insights by VOC score"
 ```
 
 **Expected Response:**
+
 - List of 5 insights ranked by priority
 - Each with: title, VOC score (or priority_score), description, severity
 - Scores should be in descending order
@@ -599,11 +640,13 @@ In Claude Desktop:
 **Step 8: Generate PRD**
 
 In Claude Desktop:
+
 ```
 "Generate a PRD for the highest-priority insight"
 ```
 
 **Expected Response:**
+
 - Should take 10-15 seconds
 - Should generate a complete PRD document
 - PRD should include: Executive Summary, Problem Statement, Solution, Success Metrics
@@ -612,15 +655,18 @@ In Claude Desktop:
 **Step 9: Export PRD**
 
 In Claude Desktop:
+
 ```
 "Export that PRD to ~/Desktop/test-prd.md"
 ```
 
 **Expected Response:**
+
 - Should confirm export
 - File should be created at ~/Desktop/test-prd.md
 
 **Verify the export:**
+
 ```bash
 # Check file exists
 ls -la ~/Desktop/test-prd.md
@@ -631,6 +677,7 @@ cat ~/Desktop/test-prd.md
 ```
 
 **✅ Basic Functionality Test PASSED if:**
+
 - All 9 steps completed successfully
 - Backend is running and responsive
 - Demo data uploaded to backend
@@ -646,21 +693,26 @@ cat ~/Desktop/test-prd.md
 ### Test 1: Slack Integration (15 minutes)
 
 **Prerequisites:**
+
 - Slack workspace admin access
 - Ability to create apps
 
 **Steps:**
 
 1. **Setup Slack integration**
+
    ```
    "Setup Slack integration"
    ```
+
    Follow the OAuth flow in browser
 
 2. **List channels**
+
    ```
    "List available Slack channels"
    ```
+
    Should show your workspace channels
 
 3. **Test sync** (use a test channel with a few messages)
@@ -674,21 +726,26 @@ cat ~/Desktop/test-prd.md
 ### Test 2: Google Drive Integration (15 minutes)
 
 **Prerequisites:**
+
 - Google account
 - Google Cloud project with APIs enabled
 
 **Steps:**
 
 1. **Setup Google Drive**
+
    ```
    "Setup Google Drive integration"
    ```
+
    Follow OAuth flow
 
 2. **Browse folders**
+
    ```
    "Browse my Google Drive folders"
    ```
+
    Should show your Drive folders
 
 3. **Preview folder** (use a small test folder)
@@ -704,13 +761,16 @@ cat ~/Desktop/test-prd.md
 **Steps:**
 
 1. **Get template**
+
    ```
    "Show me CSV templates"
    ```
+
    Should list available templates
 
 2. **Upload custom CSV**
    Create a simple CSV:
+
    ```csv
    text,customer_name,created_at
    "Test feedback 1","Test Corp","2025-01-15T10:00:00Z"
@@ -722,6 +782,7 @@ cat ~/Desktop/test-prd.md
    ```
    "Upload CSV feedback from ~/Desktop/test-feedback.csv"
    ```
+
    Should upload 2 items
 
 **✅ PASSED if:** Template shown, CSV uploaded successfully
@@ -733,11 +794,13 @@ cat ~/Desktop/test-prd.md
 ### Test 1: Backend Down Error
 
 **Stop the backend temporarily:**
+
 ```bash
 # In the backend terminal, press Ctrl+C to stop it
 ```
 
 In Claude Desktop:
+
 ```
 "Upload CSV feedback from ~/Desktop/produckai-test/demo-data/feedback.csv"
 ```
@@ -745,6 +808,7 @@ In Claude Desktop:
 **Expected:** Clear error message about backend not accessible, not a crash
 
 **Restart the backend:**
+
 ```bash
 # In backend terminal
 uvicorn apps.api.main:app --reload --host 0.0.0.0 --port 8000
@@ -753,6 +817,7 @@ uvicorn apps.api.main:app --reload --host 0.0.0.0 --port 8000
 ### Test 2: Invalid Input
 
 In Claude Desktop:
+
 ```
 "Upload CSV feedback from /nonexistent/file.csv"
 ```
@@ -764,6 +829,7 @@ In Claude Desktop:
 ```
 "Calculate VOC scores for all insights"
 ```
+
 (Before uploading any feedback)
 
 **Expected:** Info message about no insights available, not a crash
@@ -777,6 +843,7 @@ In Claude Desktop:
 **Expected:** Error message about insight not found (404 from backend)
 
 **✅ Error Handling Test PASSED if:**
+
 - Backend down error is handled gracefully
 - File not found errors are clear
 - Empty data scenarios handled
@@ -791,6 +858,7 @@ In Claude Desktop:
 ### Test 1: Large CSV Upload
 
 Create a CSV with 100 rows:
+
 ```python
 # Run this in Python to generate test data
 import csv
@@ -811,11 +879,13 @@ print("Created large-feedback.csv with 100 items")
 ```
 
 In Claude Desktop:
+
 ```
 "Upload CSV feedback from ~/Desktop/large-feedback.csv"
 ```
 
 **Expected:**
+
 - Should complete in < 10 seconds
 - Should upload all 100 items
 - No timeouts or errors
@@ -827,11 +897,13 @@ In Claude Desktop:
 ```
 
 **Expected:**
+
 - Should complete in 2-3 minutes for 100 items
 - Should not timeout
 - Should generate themes
 
 **✅ Performance Test PASSED if:**
+
 - Large uploads work
 - Clustering completes in reasonable time
 - No timeouts
@@ -865,6 +937,7 @@ rm ~/.produckai/state.db
 ```
 
 In Claude Desktop:
+
 ```
 "Upload the demo feedback CSV at ~/Desktop/produckai-test/demo-data/feedback.csv"
 ```
@@ -872,6 +945,7 @@ In Claude Desktop:
 **Expected:** Should work as if fresh install
 
 **✅ Cleanup Test PASSED if:**
+
 - Can reset state
 - Fresh start works
 - No orphaned data
@@ -881,18 +955,21 @@ In Claude Desktop:
 ## Final Verification Checklist
 
 ### Installation ✅
+
 - [ ] Package installs without errors
 - [ ] Command `produckai-mcp` is available
 - [ ] Version is 0.7.0
 - [ ] Python import works
 
 ### Claude Desktop Integration ✅
+
 - [ ] Config file is valid JSON
 - [ ] MCP server connects
 - [ ] Tools are listed (50 tools)
 - [ ] Commands execute successfully
 
 ### Core Functionality ✅
+
 - [ ] CSV upload works
 - [ ] Clustering generates themes
 - [ ] VOC scoring calculates priorities
@@ -900,16 +977,19 @@ In Claude Desktop:
 - [ ] PRD export saves files
 
 ### Error Handling ✅
+
 - [ ] Invalid inputs handled gracefully
 - [ ] Clear error messages shown
 - [ ] No crashes or stack traces
 
 ### Performance ✅
+
 - [ ] Large datasets (100+ items) work
 - [ ] Clustering completes in reasonable time
 - [ ] No timeouts
 
 ### Documentation Accuracy ✅
+
 - [ ] Installation instructions work
 - [ ] Commands in docs are correct
 - [ ] Expected outputs match reality
@@ -924,6 +1004,7 @@ In Claude Desktop:
 **Problem:** `produckai-mcp: command not found`
 
 **Solution:**
+
 ```bash
 # Verify venv is activated
 which python
@@ -942,6 +1023,7 @@ pip install -e ".[dev]"
 **Problem:** Tools not appearing in Claude Desktop
 
 **Solution:**
+
 ```bash
 # 1. Verify config path is correct
 which produckai-mcp
@@ -957,6 +1039,7 @@ python -m json.tool < ~/Library/Application\ Support/Claude/claude_desktop_confi
 ### Issue 2A: "Could not connect to MCP server" or "spawn ENOENT" Error
 
 **Problem:** Claude Desktop shows error:
+
 ```
 ⚠️  Could not connect to MCP server produckai
 ⚠️  MCP produckai: spawn /path/to/python ENOENT
@@ -969,6 +1052,7 @@ python -m json.tool < ~/Library/Application\ Support/Claude/claude_desktop_confi
 **Solution - Step by Step:**
 
 **Step 1: Verify what path is in your config**
+
 ```bash
 # macOS/Linux
 cat ~/Library/Application\ Support/Claude/claude_desktop_config.json | grep command
@@ -978,6 +1062,7 @@ type %APPDATA%\Claude\claude_desktop_config.json | findstr command
 ```
 
 **Step 2: Verify if that path actually exists**
+
 ```bash
 # Copy the path from Step 1 and check if it exists
 # macOS/Linux example:
@@ -989,6 +1074,7 @@ dir C:\Users\YourName\Desktop\produckai-mcp-server\venv\Scripts\python.exe
 ```
 
 **Step 3: Find the CORRECT path**
+
 ```bash
 # Activate your venv
 cd ~/Desktop/produckai-test
@@ -1003,6 +1089,7 @@ which produckai-mcp  # macOS/Linux
 ```
 
 **Step 4: Update your config with the CORRECT path**
+
 ```bash
 # Open config file
 open ~/Library/Application\ Support/Claude/claude_desktop_config.json  # macOS
@@ -1013,6 +1100,7 @@ open ~/Library/Application\ Support/Claude/claude_desktop_config.json  # macOS
 ```
 
 **Step 5: Verify the path exists**
+
 ```bash
 # Use the exact path from your config
 ls -la /Users/yourusername/Desktop/produckai-test/test-venv/bin/produckai-mcp
@@ -1020,6 +1108,7 @@ ls -la /Users/yourusername/Desktop/produckai-test/test-venv/bin/produckai-mcp
 ```
 
 **Step 6: Completely quit and restart Claude Desktop**
+
 ```bash
 # macOS: Cmd+Q (not just close window!)
 # Windows: Right-click taskbar → Quit
@@ -1027,6 +1116,7 @@ ls -la /Users/yourusername/Desktop/produckai-test/test-venv/bin/produckai-mcp
 ```
 
 **Common Wrong Paths:**
+
 - ❌ `/Users/rohitsaraf/Desktop/produckai-mcp-server/venv/bin/python` (copied from example)
 - ❌ `./test-venv/bin/produckai-mcp` (relative path)
 - ❌ `/path/to/produckai-mcp` (placeholder not replaced)
@@ -1039,6 +1129,7 @@ ls -la /Users/yourusername/Desktop/produckai-test/test-venv/bin/produckai-mcp
 **Problem:** "Backend not running" or "Connection refused" errors
 
 **Solution:**
+
 ```bash
 # Check if backend is running
 curl http://localhost:8000/healthz
@@ -1059,6 +1150,7 @@ curl http://localhost:8000/healthz
 **Problem:** "Failed to connect to Anthropic API"
 
 **Solution:**
+
 ```bash
 # Test API key manually
 export ANTHROPIC_API_KEY="your-key"
@@ -1073,6 +1165,7 @@ python -c "from anthropic import Anthropic; print(Anthropic().messages.create(mo
 **Problem:** "File not found: demo-data/feedback.csv"
 
 **Solution:**
+
 ```bash
 # Use absolute path
 cd ~/Desktop/produckai-test
@@ -1087,6 +1180,7 @@ ls -la demo-data/feedback.csv
 **Problem:** Tools work but return "404 Not Found" errors
 
 **Solution:**
+
 ```bash
 # This means MCP server and backend API endpoints don't match
 # This should NOT happen after the API client fixes, but if it does:
@@ -1167,11 +1261,13 @@ Issues Found:
 ## Next Steps After Testing
 
 ### If All Tests Pass ✅
+
 1. Document test results
 2. Proceed with PyPI publishing (Week 2, Days 8-11)
 3. Make GitHub repository public
 
 ### If Issues Found ❌
+
 1. Document specific failures
 2. Fix issues in development directory
 3. Copy fixes to github-release clone
@@ -1181,12 +1277,14 @@ Issues Found:
 ---
 
 **Testing Time Estimate:**
+
 - Part 0 (Backend setup): ~10 minutes
 - Minimum (Parts 0-3): ~55 minutes
 - With integrations (Parts 0-4): ~100 minutes
 - With all optional tests: ~130 minutes
 
 **Recommendation:**
+
 1. **ALWAYS do Part 0 first** - backend must be running
 2. Then do Parts 1-3 to validate core functionality
 3. Add integration tests if time permits (Part 4)

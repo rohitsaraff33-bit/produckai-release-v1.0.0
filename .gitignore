@@ -67,6 +67,10 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
+# Claude Code — local-only files (contain tokens / machine-specific state)
+.claude/settings.local.json
+.claude-log.txt
+
 # Alembic
 alembic/versions/*.pyc
 
