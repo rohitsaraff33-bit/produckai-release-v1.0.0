@@ -111,6 +111,7 @@ produckai/
 ## 🎯 What Was Built
 
 ### 1. Backend (Python/FastAPI)
+
 - **11 API Endpoints**: Health, themes, search, clustering, ingestion, tickets, admin
 - **7 Database Models**: Feedback, Theme, Customer, Artifact, + junction tables
 - **2 Core Services**: Embeddings (sentence-transformers), Clustering (HDBSCAN)
@@ -119,23 +120,27 @@ produckai/
 - **Full Migrations**: Alembic setup with initial schema
 
 ### 2. Frontend (Next.js/TypeScript)
+
 - **Themes Board**: List all themes with scores, trends, and metrics
 - **Theme Detail**: Deep dive with score breakdown and customer quotes
 - **Responsive Design**: Tailwind CSS with clean, professional UI
 - **Real-time API**: SWR for efficient data fetching
 
 ### 3. Chrome Extension (MV3)
+
 - **Jira Integration**: Shows ThemeScore on ticket pages
 - **Side Panel**: Top themes and customer quotes
 - **PRD Generator**: One-click PRD outline with citations
 
 ### 4. Infrastructure
+
 - **Docker Compose**: All services orchestrated
 - **Postgres + pgvector**: Vector similarity search
 - **Redis**: Queue and cache
 - **Makefile**: 20+ developer commands
 
 ### 5. Demo Mode
+
 - **45 Sample Items**: 30 Slack messages + 15 Jira issues
 - **5 Demo Customers**: Range of segments (ENT, MM, SMB)
 - **Realistic Data**: Based on common product feedback patterns
@@ -143,6 +148,7 @@ produckai/
 ## 🚀 Quick Start Commands
 
 ### 1. First Time Setup (3 minutes)
+
 ```bash
 cd /Users/rohitsaraf/claude-code/produckai
 
@@ -163,12 +169,14 @@ make cluster
 ```
 
 ### 2. Access the Application
+
 - **Web UI**: http://localhost:3000
 - **API Docs**: http://localhost:8000/docs
 - **API**: http://localhost:8000
 - **Health**: http://localhost:8000/healthz
 
 ### 3. Verify Everything Works
+
 ```bash
 # Check service status
 make ps
@@ -186,12 +194,14 @@ make logs-web
 ## 📊 Key Features Implemented
 
 ### ✅ Data Ingestion
+
 - [x] Slack connector (demo mode with sample JSONL)
 - [x] Jira connector (demo mode with sample JSON)
 - [x] Linear stub (placeholder for future)
 - [x] CSV/upload support (via Feedback model)
 
 ### ✅ ML Pipeline
+
 - [x] Sentence-transformers embedding (all-MiniLM-L6-v2)
 - [x] HDBSCAN clustering with configurable parameters
 - [x] KeyBERT label generation
@@ -199,6 +209,7 @@ make logs-web
 - [x] pgvector storage and similarity search
 
 ### ✅ Scoring Algorithm
+
 - [x] Frequency normalization (30d/90d exponentially weighted)
 - [x] ACV normalization (log-scaled)
 - [x] Sentiment lift (negative = higher urgency)
@@ -208,6 +219,7 @@ make logs-web
 - [x] Configurable weights via environment or API
 
 ### ✅ API
+
 - [x] GET /healthz
 - [x] GET /themes (with sorting and pagination)
 - [x] GET /themes/{id} (with sample feedback)
@@ -221,6 +233,7 @@ make logs-web
 - [x] POST /admin/weights
 
 ### ✅ Frontend
+
 - [x] Themes board with sorting
 - [x] Theme detail page
 - [x] Score breakdown visualization
@@ -228,6 +241,7 @@ make logs-web
 - [x] Responsive design
 
 ### ✅ Extension
+
 - [x] Chrome MV3 manifest
 - [x] Jira page detection
 - [x] ThemeScore display
@@ -235,6 +249,7 @@ make logs-web
 - [x] PRD outline generator
 
 ### ✅ DevOps
+
 - [x] Docker Compose orchestration
 - [x] Alembic migrations
 - [x] Makefile with 20+ commands
@@ -288,26 +303,33 @@ make clean                # Remove all data (fresh start)
 ## 📈 What's Working
 
 ### ✅ Demo Mode
+
 1. Start services → 2. Migrate → 3. Seed → 4. Cluster → 5. Explore!
 
 ### ✅ API
+
 All 11 endpoints functional with proper error handling
 
 ### ✅ Web UI
+
 Clean, responsive interface showing themes and details
 
 ### ✅ Clustering
+
 HDBSCAN successfully groups similar feedback into themes
 
 ### ✅ Scoring
+
 Transparent 6-component ThemeScore with realistic values
 
 ### ✅ Extension
+
 Loads on Jira pages, fetches scores, generates PRDs
 
 ## 🎓 Learning Points
 
 ### ThemeScore Formula
+
 ```
 Score =
   0.35 × Frequency_norm +
@@ -319,6 +341,7 @@ Score =
 ```
 
 ### Tech Stack Highlights
+
 - **FastAPI**: Modern Python web framework (async, auto docs)
 - **SQLAlchemy 2.0**: ORM with pgvector support
 - **Sentence-transformers**: 384-dim embeddings in ~1ms/text
@@ -329,18 +352,21 @@ Score =
 ## 🚧 Future Enhancements (v2+)
 
 ### Connectors
+
 - [ ] Live Slack integration (with OAuth)
 - [ ] Live Jira integration (with better field mapping)
 - [ ] Linear full implementation
 - [ ] Zendesk, Intercom, GitHub Issues
 
 ### ML Improvements
+
 - [ ] Fine-tuned embeddings for product feedback
 - [ ] Automatic theme merging/splitting
 - [ ] Sentiment analysis (VADER or fine-tuned)
 - [ ] Named entity recognition
 
 ### Features
+
 - [ ] Multi-user workspaces
 - [ ] Comment/vote on themes
 - [ ] Export to Jira (create epics)
@@ -348,6 +374,7 @@ Score =
 - [ ] API webhooks
 
 ### Scale
+
 - [ ] GPU inference for embeddings
 - [ ] Incremental clustering
 - [ ] Read replicas
@@ -356,6 +383,7 @@ Score =
 ## 💾 Data Model Summary
 
 ### Tables
+
 - **feedback**: Raw feedback with embeddings
 - **themes**: Clustered themes with centroids
 - **feedback_theme**: Many-to-many junction
@@ -365,6 +393,7 @@ Score =
 - **theme_metrics**: Calculated scores and metrics
 
 ### Indexes
+
 - Vector similarity (ivfflat on embeddings/centroids)
 - Full-text search (gin on feedback.text)
 - Standard B-tree on foreign keys and sort fields
@@ -385,18 +414,21 @@ Score =
 ## 🙏 Next Steps for You
 
 ### Immediate (Today)
+
 1. Run `make up && make migrate && make seed && make cluster`
 2. Open http://localhost:3000 and explore
 3. Try the API at http://localhost:8000/docs
 4. Load the Chrome extension
 
 ### This Week
+
 1. Customize demo data in `samples/`
 2. Adjust scoring weights in `.env`
 3. Explore the codebase (`apps/api`, `apps/web`)
 4. Add your own feedback sources
 
 ### This Month
+
 1. Connect real Slack workspace
 2. Connect real Jira project
 3. Deploy to production (AWS/GCP/Azure)
@@ -416,6 +448,7 @@ Score =
 ## 🎊 Congratulations!
 
 You now have a fully functional Product Management Copilot that:
+
 - Ingests feedback from multiple sources
 - Clusters it into themes using ML
 - Calculates transparent priority scores

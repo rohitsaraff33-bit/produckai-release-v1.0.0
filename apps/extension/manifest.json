@@ -3,13 +3,8 @@
   "name": "ProduckAI - Jira Helper",
   "version": "1.0.0",
   "description": "Show ThemeScore and customer feedback for Jira tickets",
-  "permissions": [
-    "activeTab",
-    "storage"
-  ],
-  "host_permissions": [
-    "https://*.atlassian.net/*"
-  ],
+  "permissions": ["activeTab", "storage"],
+  "host_permissions": ["https://*.atlassian.net/*"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {

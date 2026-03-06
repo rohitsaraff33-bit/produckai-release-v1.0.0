@@ -20,7 +20,7 @@ from apps.api.api.ingest import router as ingest_router
 from apps.api.api.integrations import router as integrations_router
 from apps.api.api.jira import router as jira_router
 from apps.api.api.search import router as search_router
-from apps.api.api.themes import router as themes_router
+from apps.api.api.insights import router as themes_router
 from apps.api.api.upload import router as upload_router
 from apps.api.config import get_settings
 
@@ -38,10 +38,25 @@ logging.basicConfig(level=settings.log_level)
 logger = structlog.get_logger()
 
 
+_DEFAULT_JWT_SECRET = "your-secret-key-change-in-production"
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan events."""
     logger.info("Starting ProduckAI API", version="1.0.0", demo_mode=settings.demo_mode)
+
+    if settings.jwt_secret == _DEFAULT_JWT_SECRET:
+        logger.warning(
+            "SECURITY: JWT_SECRET is set to the default dev value. "
+            "Set JWT_SECRET in your environment before deploying to production."
+        )
+    if "*" in settings.cors_origins:
+        logger.warning(
+            "SECURITY: CORS_ORIGINS contains '*' (all origins allowed). "
+            "Set CORS_ORIGINS to specific domains before deploying to production."
+        )
+
     yield
     logger.info("Shutting down ProduckAI API")
 
@@ -54,10 +69,10 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS middleware
+# CORS middleware — origins controlled via CORS_ORIGINS env var
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, restrict to specific origins
+    allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

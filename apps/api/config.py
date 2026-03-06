@@ -1,9 +1,9 @@
 """Application configuration using Pydantic settings."""
 
 from functools import lru_cache
-from typing import Literal
+from typing import List, Literal
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -32,6 +32,21 @@ class Settings(BaseSettings):
     api_host: str = Field(default="0.0.0.0", description="API host")
     api_port: int = Field(default=8000, description="API port")
     api_workers: int = Field(default=4, description="Number of API workers")
+
+    # CORS — set CORS_ORIGINS as comma-separated list in production
+    # e.g. CORS_ORIGINS=https://app.example.com,https://admin.example.com
+    cors_origins: List[str] = Field(
+        default=["http://localhost:3000"],
+        description="Allowed CORS origins",
+    )
+
+    @field_validator("cors_origins", mode="before")
+    @classmethod
+    def parse_cors_origins(cls, v: object) -> List[str]:
+        """Accept either a list or a comma-separated string from env."""
+        if isinstance(v, str):
+            return [origin.strip() for origin in v.split(",") if origin.strip()]
+        return v  # type: ignore[return-value]
 
     # JWT
     jwt_secret: str = Field(

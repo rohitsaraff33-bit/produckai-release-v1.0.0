@@ -67,14 +67,18 @@ make cluster
 ## Step 6: Explore! (∞ minutes)
 
 ### Web UI
+
 Open http://localhost:3000 in your browser to see:
+
 - Themes board with scores
 - Click any theme to see details and customer quotes
 
 ### API Docs
+
 Open http://localhost:8000/docs for interactive API documentation
 
 ### Test API Directly
+
 ```bash
 # Get all themes
 curl http://localhost:8000/themes | jq
@@ -101,6 +105,7 @@ curl http://localhost:8000/tickets/PROD-102/score | jq
 ## Troubleshooting
 
 ### Services won't start
+
 ```bash
 make clean
 make build
@@ -108,6 +113,7 @@ make up
 ```
 
 ### Database connection errors
+
 ```bash
 # Check Postgres is healthy
 docker compose logs postgres
@@ -117,6 +123,7 @@ make down && make up
 ```
 
 ### Clustering returns no themes
+
 ```bash
 # Check feedback count (need at least 20)
 docker compose exec api python -c "from apps.api.database import get_db_context; from apps.api.models import Feedback; db = next(get_db_context()); print(db.query(Feedback).count())"
@@ -125,6 +132,7 @@ docker compose exec api python -c "from apps.api.database import get_db_context;
 ```
 
 ### Web UI not loading
+
 ```bash
 # Check web container logs
 make logs-web
@@ -158,12 +166,15 @@ make clean          # Remove containers and volumes (fresh start)
 ## What's Included in Demo Mode?
 
 ### Demo Data
+
 - **5 Customers**: Acme Corp, TechStart Inc, SmallBiz LLC, Enterprise Solutions, MidCo Industries
 - **30 Slack Messages**: Product feedback from various channels
 - **15 Jira Issues**: Real-world feature requests and bugs
 
 ### Expected Themes
+
 After clustering, you should see ~5-8 themes like:
+
 - Performance & Loading Issues
 - Mobile App Crashes
 - Dark Mode Requests
@@ -172,7 +183,9 @@ After clustering, you should see ~5-8 themes like:
 - Search Improvements
 
 ### Sample Scores
+
 Themes will have scores between 0.0-1.0 based on:
+
 - Frequency (how many customers mentioned it)
 - ACV (total contract value of affected customers)
 - Sentiment (urgency from negative feedback)
@@ -182,19 +195,25 @@ Themes will have scores between 0.0-1.0 based on:
 ## Next Steps
 
 ### Customize Demo Data
+
 Edit these files and re-run `make seed` (with `--reset` flag):
+
 - `samples/slack/demo_messages.jsonl`
 - `samples/jira/demo_issues.json`
 
 ### Adjust Scoring Weights
+
 Edit `.env` and restart services:
+
 ```bash
 SCORE_WEIGHT_FREQUENCY=0.4  # Increase frequency weight
 SCORE_WEIGHT_ACV=0.2        # Decrease ACV weight
 ```
 
 ### Add Real Data
+
 See README.md for instructions on connecting:
+
 - Slack (set `SLACK_BOT_TOKEN`)
 - Jira (set `JIRA_API_TOKEN`)
 - Linear (stub implementation)

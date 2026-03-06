@@ -20,6 +20,24 @@ from apps.api.services.pii_redaction import get_pii_redaction_service
 
 logger = structlog.get_logger()
 
+# Canonical column aliases for CSV parsing. First match wins.
+COLUMN_ALIASES: dict[str, list[str]] = {
+    "text": ["Feedback", "feedback", "text", "comment", "description"],
+    "customer": ["Company Name", "customer", "customer_name", "company"],
+    "acv": ["ACV", "acv", "annual_contract_value"],
+    "contact": ["Company Contact", "contact", "email"],
+    "timestamp": ["date", "timestamp", "created_at"],
+}
+
+
+def _get_field(row: dict, key: str) -> Optional[str]:
+    """Return the first non-empty value in *row* matching any alias for *key*."""
+    for alias in COLUMN_ALIASES.get(key, []):
+        value = row.get(alias)
+        if value:
+            return value
+    return None
+
 
 @dataclass
 class ParsedFeedback:
@@ -179,48 +197,27 @@ class FileUploadService:
         reader = csv.DictReader(io.StringIO(content))
 
         for row in reader:
-            # Support multiple column name variations
-            text = (
-                row.get("Feedback")
-                or row.get("feedback")
-                or row.get("text")
-                or row.get("comment")
-                or row.get("description")
-                or ""
-            )
-
-            customer_name = (
-                row.get("Company Name")
-                or row.get("customer")
-                or row.get("customer_name")
-                or row.get("company")
-                or None
-            )
+            text = _get_field(row, "text") or ""
+            customer_name = _get_field(row, "customer")
+            contact_email = _get_field(row, "contact")
 
             # Extract ACV if available
-            acv_str = row.get("ACV") or row.get("acv") or row.get("annual_contract_value")
+            acv_str = _get_field(row, "acv")
             acv = None
             if acv_str:
                 try:
                     acv = float(acv_str)
-                except:
-                    pass
+                except (ValueError, TypeError):
+                    logger.debug("Invalid ACV value, skipping", acv_str=acv_str)
 
-            # Extract contact email if available
-            contact_email = (
-                row.get("Company Contact")
-                or row.get("contact")
-                or row.get("email")
-                or None
-            )
-
-            timestamp_str = row.get("date") or row.get("timestamp") or row.get("created_at")
+            # Extract timestamp if available
+            timestamp_str = _get_field(row, "timestamp")
             timestamp = None
             if timestamp_str:
                 try:
                     timestamp = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
-                except:
-                    pass
+                except (ValueError, AttributeError):
+                    logger.debug("Invalid timestamp value, skipping", timestamp_str=timestamp_str)
 
             if text and text.strip():
                 metadata = {"csv_row": row}

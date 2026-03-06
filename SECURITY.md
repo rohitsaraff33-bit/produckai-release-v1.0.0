@@ -16,17 +16,20 @@ We release patches for security vulnerabilities for the following versions:
 ProduckAI implements multiple layers of security:
 
 ### Data Protection
+
 - **PII Redaction**: Automatic removal of emails, phone numbers, and URLs from ingested feedback
 - **Read-Only OAuth Scopes**: Integrations never write or delete data
 - **No Raw Audio Storage**: Only text embeddings are stored (Zoom transcripts)
 - **Local-First Architecture**: Demo mode runs fully offline with no external API calls
 
 ### Authentication & Authorization
+
 - **JWT Authentication**: Secure token-based auth for API access
 - **OAuth 2.0 Flows**: Industry-standard auth for Slack, Google Drive, Zoom integrations
 - **API Key Encryption**: Sensitive credentials encrypted at rest
 
 ### Infrastructure
+
 - **Environment Variables**: All secrets configured via `.env` (never committed)
 - **HTTPS Support**: Production deployments should use TLS/SSL
 - **CORS Configuration**: Configurable cross-origin request policies
@@ -82,6 +85,7 @@ Day 31+  - Public disclosure coordinated with reporter
 We use the following severity classifications:
 
 ### Critical
+
 - Remote code execution (RCE)
 - SQL injection leading to data breach
 - Authentication bypass affecting all users
@@ -90,6 +94,7 @@ We use the following severity classifications:
 **Response time**: Fix within 7-14 days
 
 ### High
+
 - Stored XSS affecting multiple users
 - Sensitive data exposure (API keys, customer data)
 - OAuth flow vulnerabilities
@@ -98,6 +103,7 @@ We use the following severity classifications:
 **Response time**: Fix within 30 days
 
 ### Medium
+
 - Reflected XSS with limited impact
 - CSRF on non-critical operations
 - Information disclosure (non-sensitive)
@@ -106,6 +112,7 @@ We use the following severity classifications:
 **Response time**: Fix within 60 days
 
 ### Low
+
 - Security misconfigurations with minimal impact
 - Missing security headers
 - Verbose error messages
@@ -128,6 +135,7 @@ We use the following severity classifications:
 ### Secrets Management
 
 **Never commit:**
+
 - `.env` files (already in `.gitignore`)
 - API keys or tokens
 - Private keys (`.pem`, `.key` files)
@@ -135,6 +143,7 @@ We use the following severity classifications:
 - OAuth client secrets
 
 **Use environment variables:**
+
 ```python
 # ✅ Good
 api_key = os.getenv("ANTHROPIC_API_KEY")
@@ -185,15 +194,21 @@ session.execute(f"SELECT * FROM feedback WHERE id = {user_id}")
 Frontend (Next.js) automatically escapes HTML, but be careful with:
 
 ```tsx
-{/* ✅ Good - Auto-escaped */}
-<div>{feedback.text}</div>
+{
+  /* ✅ Good - Auto-escaped */
+}
+<div>{feedback.text}</div>;
 
-{/* ❌ Bad - dangerouslySetInnerHTML without sanitization */}
-<div dangerouslySetInnerHTML={{ __html: feedback.text }} />
+{
+  /* ❌ Bad - dangerouslySetInnerHTML without sanitization */
+}
+<div dangerouslySetInnerHTML={{ __html: feedback.text }} />;
 
-{/* ✅ OK - If you must use HTML, sanitize first */}
-import DOMPurify from 'isomorphic-dompurify';
-<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(feedback.text) }} />
+{
+  /* ✅ OK - If you must use HTML, sanitize first */
+}
+import DOMPurify from "isomorphic-dompurify";
+<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(feedback.text) }} />;
 ```
 
 ---
@@ -203,6 +218,7 @@ import DOMPurify from 'isomorphic-dompurify';
 ### When to Request an Audit
 
 We conduct security audits:
+
 - Before major releases (1.0, 2.0, etc.)
 - After significant architectural changes
 - Upon discovery of a vulnerability in a dependency
@@ -229,6 +245,7 @@ We conduct security audits:
 Before deploying to production:
 
 ### Environment
+
 - [ ] Use strong, randomly generated `JWT_SECRET`
   ```bash
   openssl rand -base64 32
@@ -239,6 +256,7 @@ Before deploying to production:
 - [ ] Configure `CORS` to allow only your domain
 
 ### Database
+
 - [ ] Use managed Postgres service (AWS RDS, Supabase, Neon)
 - [ ] Enable SSL/TLS for database connections
 - [ ] Set up database backups (daily minimum)
@@ -246,6 +264,7 @@ Before deploying to production:
 - [ ] Use strong database password (16+ characters, alphanumeric + symbols)
 
 ### API
+
 - [ ] Run API behind reverse proxy (Nginx, Traefik, Cloudflare)
 - [ ] Enable rate limiting (nginx `limit_req`, Cloudflare Rate Limiting)
 - [ ] Set up logging and monitoring (Sentry, DataDog, CloudWatch)
@@ -253,12 +272,14 @@ Before deploying to production:
 - [ ] Disable debug mode (`LOG_LEVEL=WARNING` or `INFO`)
 
 ### OAuth & Integrations
+
 - [ ] Register OAuth apps with production URLs (not `localhost`)
 - [ ] Use separate OAuth credentials for prod (not dev keys)
 - [ ] Enable OAuth consent screens (Google, Zoom)
 - [ ] Restrict OAuth scopes to minimum required (read-only)
 
 ### Infrastructure
+
 - [ ] Use managed Redis (ElastiCache, Upstash, Redis Cloud)
 - [ ] Enable Redis password authentication
 - [ ] Set up firewall rules (only API can access Redis/Postgres)
@@ -271,12 +292,14 @@ Before deploying to production:
 ## 📚 Security Resources
 
 ### External Resources
+
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - [OWASP API Security Top 10](https://owasp.org/www-project-api-security/)
 - [CWE/SANS Top 25](https://cwe.mitre.org/top25/)
 - [FastAPI Security Best Practices](https://fastapi.tiangolo.com/tutorial/security/)
 
 ### Tools
+
 - **Dependency Scanning**: `pip-audit`, `safety`, GitHub Dependabot
 - **SAST**: `bandit` (Python), `semgrep`
 - **Secret Scanning**: GitHub Secret Scanning, `truffleHog`, `gitleaks`
@@ -304,16 +327,20 @@ Once a vulnerability is fixed:
 **Fixed in**: 1.2.3
 
 ### Description
+
 A SQL injection vulnerability in the feedback search endpoint allowed
 attackers to execute arbitrary SQL queries.
 
 ### Impact
+
 An authenticated attacker could read sensitive data from the database.
 
 ### Remediation
+
 Upgrade to version 1.2.3 or later.
 
 ### Credit
+
 Discovered by [Security Researcher Name]
 ```
 

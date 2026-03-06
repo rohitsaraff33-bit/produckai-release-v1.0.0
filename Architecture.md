@@ -3,6 +3,7 @@
 ## System Overview
 
 ProduckAI is a local-first product management copilot that:
+
 1. Ingests feedback from Slack, Jira, and Linear
 2. Embeds text using sentence-transformers
 3. Clusters feedback into themes using HDBSCAN
@@ -263,35 +264,41 @@ CREATE INDEX idx_feedback_text_fts ON feedback USING gin(to_tsvector('english', 
 ### Embedding Service
 
 **Model**: `sentence-transformers/all-MiniLM-L6-v2`
+
 - Dimension: 384
 - Speed: ~1000 sentences/sec on CPU
 - Quality: Good for semantic similarity
 
 **Process**:
+
 1. Text preprocessing (lowercase, strip, truncate to 512 chars)
 2. Batch encoding (batch_size=32)
 3. L2 normalization
 4. Store in pgvector with cosine distance
 
 **Alternative models**:
+
 - `sentence-transformers/multi-qa-MiniLM-L6-cos-v1` (better for Q&A)
 - `sentence-transformers/all-mpnet-base-v2` (higher quality, slower)
 
 ### Clustering (HDBSCAN)
 
 **Parameters**:
+
 - `min_cluster_size`: 5 (minimum feedback per theme)
 - `min_samples`: 3 (noise threshold)
 - `metric`: cosine
 - `cluster_selection_method`: eom (excess of mass)
 
 **Why HDBSCAN?**
+
 - Finds variable-density clusters
 - Doesn't require # of clusters upfront
 - Marks noise (outliers) as -1
 - Stable across runs
 
 **Process**:
+
 1. Fetch embeddings from DB
 2. Fit HDBSCAN
 3. For each cluster:
@@ -302,11 +309,13 @@ CREATE INDEX idx_feedback_text_fts ON feedback USING gin(to_tsvector('english', 
 ### Label Generation
 
 **KeyBERT** (default):
+
 1. Extract top 5 n-grams (1-3 words) using BERT embeddings
 2. Rank by similarity to cluster centroid
 3. Format: "keyword1, keyword2, keyword3"
 
 **LLM Refinement** (if `OPENAI_API_KEY` set):
+
 1. Pass KeyBERT keywords + 3 exemplar quotes to GPT-4
 2. Prompt: "Generate a concise theme label (3-7 words) that captures the essence"
 3. Use result as theme.label
@@ -314,6 +323,7 @@ CREATE INDEX idx_feedback_text_fts ON feedback USING gin(to_tsvector('english', 
 ### ThemeScore Calculation
 
 **Formula**:
+
 ```python
 score = (
     w_f * F_norm +
@@ -358,6 +368,7 @@ score = (
    - Prevents duplicate themes from ranking high
 
 **Weights** (configurable):
+
 - Default: {f:0.35, acv:0.30, sent:0.10, seg:0.15, trend:0.10, dup:0.10}
 - Exposed via `GET/POST /admin/weights`
 
@@ -432,11 +443,13 @@ apps/web/
 ### Chrome Extension
 
 **Manifest V3**:
+
 - Content script: Detects Jira issue page
 - Side panel: Shows ThemeScore + quotes
 - Background: API requests with JWT
 
 **Communication**:
+
 ```mermaid
 sequenceDiagram
     participant Page
@@ -499,6 +512,7 @@ logger.info("clustering_started", feedback_count=123, min_cluster_size=5)
 ### Tracing (OpenTelemetry)
 
 Enable via `OTEL_ENABLED=true`:
+
 - Distributed traces across API → Worker → DB
 - Export to Jaeger, Honeycomb, or Datadog
 
@@ -549,6 +563,7 @@ Enable via `OTEL_ENABLED=true`:
 ### Evaluation
 
 `/eval/` directory:
+
 - 80 labeled pairs (feedback → gold theme)
 - Metrics:
   - Clustering coherence (silhouette score)

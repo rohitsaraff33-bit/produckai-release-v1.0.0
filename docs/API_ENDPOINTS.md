@@ -34,6 +34,7 @@
 Health check endpoint with database connectivity test.
 
 **Response:**
+
 ```json
 {
   "status": "ok",
@@ -42,6 +43,7 @@ Health check endpoint with database connectivity test.
 ```
 
 **Error Response:**
+
 ```json
 {
   "status": "error",
@@ -59,6 +61,7 @@ Health check endpoint with database connectivity test.
 List insights with sorting, filtering, and pagination.
 
 **Query Parameters:**
+
 - `sort_by` (str): `priority` | `score` | `trend` | `created_at` (default: `priority`)
 - `filter` (str, optional): `enterprise_blockers` | `high_priority` | `trending`
 - `limit` (int): Max results, ≤100 (default: 20)
@@ -70,6 +73,7 @@ List insights with sorting, filtering, and pagination.
 - `effort` (list[str], optional): Filter by effort (low, medium, high)
 
 **Response:**
+
 ```json
 [
   {
@@ -110,6 +114,7 @@ List insights with sorting, filtering, and pagination.
 Get counts for quick filter categories.
 
 **Response:**
+
 ```json
 {
   "enterprise_blockers": 5,
@@ -123,9 +128,11 @@ Get counts for quick filter categories.
 Get detailed insight with supporting feedback.
 
 **Path Parameters:**
+
 - `insight_id` (UUID): Insight identifier
 
 **Response:**
+
 ```json
 {
   "id": "uuid",
@@ -167,9 +174,11 @@ Get detailed insight with supporting feedback.
 Generate a comprehensive PRD (Product Requirements Document) for an insight.
 
 **Path Parameters:**
+
 - `insight_id` (UUID): Insight identifier
 
 **Response:**
+
 ```json
 {
   "prd_markdown": "# API Rate Limiting Enhancement\n\n*Generated: Jan 15, 2025* | *Priority: 85/100* | *Severity: HIGH*\n\n**TL;DR**: 23 customers ($500k ACV) reported 15× in 30d. 2 ENT ($300k), 3 MM ($150k), 1 SMB ($50k).\n\n---\n\n## Problem & Goal\n\nCustomers experiencing rate limit errors...",
@@ -182,12 +191,15 @@ Generate a comprehensive PRD (Product Requirements Document) for an insight.
 Generate structured AI prototype prompt from insight data.
 
 **Path Parameters:**
+
 - `insight_id` (UUID): Insight identifier
 
 **Query Parameters:**
+
 - `prototype_type` (str): `ui_component` | `feature_flow` | `mvp` | `technical_poc` (default: `mvp`)
 
 **Response:**
+
 ```json
 {
   "prompt": "# Build: API Rate Limiting Enhancement\n\n## Context\nCreate a functional MVP based on validated customer feedback...",
@@ -214,6 +226,7 @@ Generate structured AI prototype prompt from insight data.
 Trigger clustering pipeline as a background task.
 
 **Response:**
+
 ```json
 {
   "status": "accepted",
@@ -223,6 +236,7 @@ Trigger clustering pipeline as a background task.
 ```
 
 **Already Running Response:**
+
 ```json
 {
   "status": "already_running",
@@ -236,6 +250,7 @@ Trigger clustering pipeline as a background task.
 Get current clustering pipeline status.
 
 **Response:**
+
 ```json
 {
   "is_running": false,
@@ -257,11 +272,13 @@ Get current clustering pipeline status.
 List feedback items with optional source filtering.
 
 **Query Parameters:**
+
 - `source` (str, optional): Filter by source (slack, jira, zoom_transcript, gdoc, etc.)
 - `limit` (int): Max items (default: 100)
 - `offset` (int): Pagination offset (default: 0)
 
 **Response:**
+
 ```json
 [
   {
@@ -284,9 +301,11 @@ List feedback items with optional source filtering.
 List documents grouped from feedback chunks (for sources like Google Drive).
 
 **Query Parameters:**
+
 - `source` (str, optional): Filter by source (gdoc, zoom_transcript, etc.)
 
 **Response:**
+
 ```json
 [
   {
@@ -312,6 +331,7 @@ List documents grouped from feedback chunks (for sources like Google Drive).
 Start Google OAuth flow.
 
 **Response:**
+
 ```json
 {
   "authorization_url": "https://accounts.google.com/o/oauth2/v2/auth?...",
@@ -324,10 +344,12 @@ Start Google OAuth flow.
 Handle Google OAuth callback.
 
 **Query Parameters:**
+
 - `code` (str): Authorization code from Google
 - `state` (str): OAuth state for verification
 
 **Response:**
+
 ```json
 {
   "status": "success",
@@ -344,6 +366,7 @@ Handle Google OAuth callback.
 Start Zoom OAuth flow.
 
 **Response:**
+
 ```json
 {
   "authorization_url": "https://zoom.us/oauth/authorize?...",
@@ -356,10 +379,12 @@ Start Zoom OAuth flow.
 Handle Zoom OAuth callback.
 
 **Query Parameters:**
+
 - `code` (str): Authorization code from Zoom
 - `state` (str): OAuth state for verification
 
 **Response:**
+
 ```json
 {
   "status": "success",
@@ -374,6 +399,7 @@ Handle Zoom OAuth callback.
 Get list of active OAuth connections.
 
 **Response:**
+
 ```json
 {
   "connections": [
@@ -394,9 +420,11 @@ Get list of active OAuth connections.
 Disconnect OAuth provider.
 
 **Path Parameters:**
+
 - `provider` (str): `google` | `zoom`
 
 **Response:**
+
 ```json
 {
   "status": "success",
@@ -417,6 +445,7 @@ Upload customer feedback files for ingestion.
 **Request:** multipart/form-data with files
 
 **Response:**
+
 ```json
 {
   "total_files": 3,
@@ -433,6 +462,7 @@ Upload customer feedback files for ingestion.
 Get list of supported file formats for feedback upload.
 
 **Response:**
+
 ```json
 {
   "supported_formats": [
@@ -464,6 +494,7 @@ Get list of supported file formats for feedback upload.
 Ingest Slack data (demo or live based on DEMO_MODE).
 
 **Response:**
+
 ```json
 {
   "status": "completed",
@@ -477,6 +508,7 @@ Ingest Slack data (demo or live based on DEMO_MODE).
 Ingest JIRA data (demo or live based on DEMO_MODE).
 
 **Response:**
+
 ```json
 {
   "status": "completed",
@@ -490,6 +522,7 @@ Ingest JIRA data (demo or live based on DEMO_MODE).
 Ingest Google Docs data.
 
 **Request Body:**
+
 ```json
 {
   "mode": "demo",
@@ -498,6 +531,7 @@ Ingest Google Docs data.
 ```
 
 **Response:**
+
 ```json
 {
   "status": "completed",
@@ -511,6 +545,7 @@ Ingest Google Docs data.
 Ingest Zoom transcript data.
 
 **Request Body:**
+
 ```json
 {
   "mode": "demo",
@@ -521,6 +556,7 @@ Ingest Zoom transcript data.
 ```
 
 **Response:**
+
 ```json
 {
   "status": "completed",
@@ -534,6 +570,7 @@ Ingest Zoom transcript data.
 Get summary of feedback items by source.
 
 **Response:**
+
 ```json
 {
   "sources": [
@@ -561,6 +598,7 @@ Get summary of feedback items by source.
 List all customers who have contributed to insights.
 
 **Response:**
+
 ```json
 {
   "customers": [
@@ -579,9 +617,11 @@ List all customers who have contributed to insights.
 Get all insights for a specific customer.
 
 **Path Parameters:**
+
 - `customer_name` (str): Customer name
 
 **Response:**
+
 ```json
 {
   "customer": "Acme Corp",
@@ -611,6 +651,7 @@ Get all insights for a specific customer.
 Create a new JIRA ticket.
 
 **Request Body:**
+
 ```json
 {
   "jira_key": "PROD-123",
@@ -627,6 +668,7 @@ Create a new JIRA ticket.
 ```
 
 **Response:**
+
 ```json
 {
   "id": "uuid",
@@ -650,11 +692,13 @@ Create a new JIRA ticket.
 List JIRA tickets with VOC scores.
 
 **Query Parameters:**
+
 - `status` (str, optional): Filter by status
 - `min_voc_score` (float, optional): Minimum VOC score
 - `sort_by` (str): `voc_score` | `created_at` | `priority` (default: `voc_score`)
 
 **Response:**
+
 ```json
 [
   {
@@ -701,6 +745,7 @@ List JIRA tickets with VOC scores.
 Get a specific JIRA ticket with VOC score.
 
 **Path Parameters:**
+
 - `ticket_key` (str): JIRA ticket key (e.g., PROD-123)
 
 **Response:** Same as list tickets, single object
@@ -710,12 +755,15 @@ Get a specific JIRA ticket with VOC score.
 Calculate VOC score for a specific ticket.
 
 **Path Parameters:**
+
 - `ticket_key` (str): JIRA ticket key
 
 **Query Parameters:**
+
 - `similarity_threshold` (float): Minimum similarity for insight matching (default: 0.6)
 
 **Response:**
+
 ```json
 {
   "ticket_id": "uuid",
@@ -740,9 +788,11 @@ Calculate VOC score for a specific ticket.
 Calculate VOC scores for all JIRA tickets.
 
 **Query Parameters:**
+
 - `similarity_threshold` (float): Minimum similarity for insight matching (default: 0.6)
 
 **Response:**
+
 ```json
 {
   "message": "VOC scoring completed",
@@ -759,13 +809,16 @@ Calculate VOC scores for all JIRA tickets.
 Confirm or reject an insight match for a ticket.
 
 **Path Parameters:**
+
 - `ticket_key` (str): JIRA ticket key
 - `insight_id` (str): Insight UUID
 
 **Query Parameters:**
+
 - `confirmed` (bool): true to confirm, false to reject
 
 **Response:**
+
 ```json
 {
   "message": "Match confirmed",
@@ -784,6 +837,7 @@ Confirm or reject an insight match for a ticket.
 List all integration statuses.
 
 **Response:**
+
 ```json
 [
   {
@@ -808,6 +862,7 @@ List all integration statuses.
 Start Zoom OAuth flow.
 
 **Response:**
+
 ```json
 {
   "authorization_url": "https://zoom.us/oauth/authorize?...",
@@ -820,6 +875,7 @@ Start Zoom OAuth flow.
 Disconnect Zoom integration.
 
 **Response:**
+
 ```json
 {
   "message": "Zoom integration disconnected successfully"
@@ -831,9 +887,11 @@ Disconnect Zoom integration.
 Manually trigger Zoom recordings sync.
 
 **Query Parameters:**
+
 - `days_back` (int): Number of days back to fetch recordings (default: 30)
 
 **Response:**
+
 ```json
 {
   "message": "Zoom sync completed",
@@ -850,6 +908,7 @@ Manually trigger Zoom recordings sync.
 Start Google OAuth flow.
 
 **Response:**
+
 ```json
 {
   "authorization_url": "https://accounts.google.com/o/oauth2/v2/auth?...",
@@ -862,6 +921,7 @@ Start Google OAuth flow.
 Disconnect Google integration.
 
 **Response:**
+
 ```json
 {
   "message": "Google integration disconnected successfully"
@@ -873,9 +933,11 @@ Disconnect Google integration.
 Manually trigger Google Drive documents sync.
 
 **Query Parameters:**
+
 - `folder_ids` (str): Comma-separated Google Drive folder IDs (default: "")
 
 **Response:**
+
 ```json
 {
   "message": "Google Drive sync completed",
@@ -896,6 +958,7 @@ Manually trigger Google Drive documents sync.
 Process manual competitive intelligence input (Manual Mode).
 
 **Request Body:**
+
 ```json
 {
   "company_name": "ProduckAI",
@@ -920,6 +983,7 @@ Process manual competitive intelligence input (Manual Mode).
 ```
 
 **Response:**
+
 ```json
 {
   "id": "uuid",
@@ -941,6 +1005,7 @@ Process manual competitive intelligence input (Manual Mode).
 Process auto competitive intelligence research (Auto Mode).
 
 **Request Body:**
+
 ```json
 {
   "company_name": "ProduckAI",
@@ -959,10 +1024,12 @@ Process auto competitive intelligence research (Auto Mode).
 List competitive intelligence research sessions.
 
 **Query Parameters:**
+
 - `limit` (int): Maximum sessions to return (default: 20)
 - `offset` (int): Pagination offset (default: 0)
 
 **Response:**
+
 ```json
 [
   {
@@ -986,6 +1053,7 @@ List competitive intelligence research sessions.
 Get specific research session details.
 
 **Path Parameters:**
+
 - `session_id` (UUID): Research session identifier
 
 **Response:** Same as list sessions, single object
@@ -995,11 +1063,13 @@ Get specific research session details.
 List competitive intelligence insights.
 
 **Query Parameters:**
+
 - `limit` (int): Maximum insights to return (default: 20)
 - `offset` (int): Pagination offset (default: 0)
 - `competitor_name` (str, optional): Filter by competitor name
 
 **Response:**
+
 ```json
 [
   {
@@ -1040,6 +1110,7 @@ List competitive intelligence insights.
 Get detailed competitive insight.
 
 **Path Parameters:**
+
 - `insight_id` (UUID): Insight identifier
 
 **Response:** Same as list insights, single object
@@ -1053,6 +1124,7 @@ Get detailed competitive insight.
 Get current scoring configuration.
 
 **Response:**
+
 ```json
 {
   "weights": {
@@ -1075,6 +1147,7 @@ Get current scoring configuration.
 Update scoring weights (in-memory override).
 
 **Request Body:**
+
 ```json
 {
   "weights": {
@@ -1088,6 +1161,7 @@ Update scoring weights (in-memory override).
 ```
 
 **Response:**
+
 ```json
 {
   "status": "success",
@@ -1111,10 +1185,12 @@ Update scoring weights (in-memory override).
 Unified search across feedback and themes using full-text search.
 
 **Query Parameters:**
+
 - `q` (str): Search query (min length: 2)
 - `limit` (int): Maximum results, ≤100 (default: 20)
 
 **Response:**
+
 ```json
 [
   {
@@ -1143,6 +1219,7 @@ Unified search across feedback and themes using full-text search.
 Chat with PM Copilot agent.
 
 **Request Body:**
+
 ```json
 {
   "message": "What are the top 3 issues affecting enterprise customers?",
@@ -1161,6 +1238,7 @@ Chat with PM Copilot agent.
 ```
 
 **Response:**
+
 ```json
 {
   "response": "Based on your enterprise customer feedback, the top 3 issues are:\n1. API Rate Limiting (23 customers, $500k ACV)\n2. SSO Integration (15 customers, $300k ACV)\n3. Data Export (12 customers, $200k ACV)"
@@ -1176,9 +1254,11 @@ Chat with PM Copilot agent.
 Get ThemeScore for a JIRA ticket.
 
 **Path Parameters:**
+
 - `ticket_key` (str): JIRA ticket key (e.g., PROD-123)
 
 **Response:**
+
 ```json
 {
   "ticket_key": "PROD-123",
@@ -1206,9 +1286,11 @@ Get ThemeScore for a JIRA ticket.
 Generate a PRD outline for a ticket based on related themes.
 
 **Path Parameters:**
+
 - `ticket_key` (str): JIRA ticket key
 
 **Response:**
+
 ```json
 {
   "ticket_key": "PROD-123",

@@ -3,6 +3,7 @@
 ## Overview
 
 This guide covers implementing two major upgrades:
+
 - **Part A**: OAuth + Token Refresh (Google & Zoom) - IMPLEMENTED BELOW
 - **Part B**: Cursor-style Dark UI - BLUEPRINT PROVIDED
 
@@ -34,19 +35,23 @@ This guide covers implementing two major upgrades:
 ### Files Created
 
 #### 1. Core Services
+
 - `apps/api/core/secrets.py` - AES-GCM encryption
 - `apps/api/auth/providers/base.py` - Base OAuth provider
 - `apps/api/auth/providers/google_oauth.py` - Google OAuth with PKCE
 - `apps/api/auth/providers/zoom_oauth.py` - Zoom OAuth with PKCE
 
 #### 2. Database
+
 - `apps/api/models/oauth.py` - OAuthToken model
 - `infra/alembic/versions/003_add_oauth_tokens.py` - Migration
 
 #### 3. API
+
 - `apps/api/api/auth.py` - Auth endpoints router
 
 #### 4. Workers
+
 - `apps/worker/tasks/token_refresh.py` - Celery beat task
 
 ---
@@ -56,18 +61,19 @@ This guide covers implementing two major upgrades:
 ### Design System
 
 **Color Tokens** (add to `globals.css`):
+
 ```css
 :root {
   /* Dark editor theme */
-  --bg: #0B0E14;
-  --panel: #0F131A;
-  --panel-2: #11161D;
-  --border: #1B2230;
-  --muted: #7F8DA3;
-  --text: #D7E0F2;
-  --accent: #4C8BFF;
-  --accent-2: #65D6AD;
-  --warning: #E6B450;
+  --bg: #0b0e14;
+  --panel: #0f131a;
+  --panel-2: #11161d;
+  --border: #1b2230;
+  --muted: #7f8da3;
+  --text: #d7e0f2;
+  --accent: #4c8bff;
+  --accent-2: #65d6ad;
+  --warning: #e6b450;
 
   /* Semantic */
   --sidebar-width: 48px;
@@ -135,12 +141,17 @@ AppShell
 ### Key Components to Build
 
 #### 1. AppShell.tsx
+
 ```tsx
-'use client'
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from 'react-resizable-panels'
-import SidebarIconNav from './SidebarIconNav'
-import ExplorerPanel from './ExplorerPanel'
-import CopilotPanel from './CopilotPanel'
+"use client";
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "react-resizable-panels";
+import SidebarIconNav from "./SidebarIconNav";
+import ExplorerPanel from "./ExplorerPanel";
+import CopilotPanel from "./CopilotPanel";
 
 export default function AppShell({ children }) {
   return (
@@ -151,51 +162,62 @@ export default function AppShell({ children }) {
           <ExplorerPanel />
         </ResizablePanel>
         <ResizableHandle />
-        <ResizablePanel>
-          {children}
-        </ResizablePanel>
+        <ResizablePanel>{children}</ResizablePanel>
         <ResizableHandle />
         <ResizablePanel defaultSize={25} minSize={20} maxSize={35}>
           <CopilotPanel />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
-  )
+  );
 }
 ```
 
 #### 2. CommandPalette.tsx
+
 ```tsx
-'use client'
-import { Command } from 'cmdk'
-import { useEffect, useState } from 'react'
+"use client";
+import { Command } from "cmdk";
+import { useEffect, useState } from "react";
 
 export default function CommandPalette() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        setOpen(prev => !prev)
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((prev) => !prev);
       }
-    }
-    document.addEventListener('keydown', down)
-    return () => document.removeEventListener('keydown', down)
-  }, [])
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
   return (
     <Command.Dialog open={open} onOpenChange={setOpen}>
       <Command.Input placeholder="Type a command or search..." />
       <Command.List>
         <Command.Group heading="Actions">
-          <Command.Item onSelect={() => {/* ingest demo */}}>
+          <Command.Item
+            onSelect={() => {
+              /* ingest demo */
+            }}
+          >
             Ingest Demo Data
           </Command.Item>
-          <Command.Item onSelect={() => {/* run clustering */}}>
+          <Command.Item
+            onSelect={() => {
+              /* run clustering */
+            }}
+          >
             Run Clustering
           </Command.Item>
-          <Command.Item onSelect={() => {/* open integrations */}}>
+          <Command.Item
+            onSelect={() => {
+              /* open integrations */
+            }}
+          >
             Open Integrations
           </Command.Item>
         </Command.Group>
@@ -204,28 +226,29 @@ export default function CommandPalette() {
         </Command.Group>
       </Command.List>
     </Command.Dialog>
-  )
+  );
 }
 ```
 
 #### 3. CopilotPanel.tsx
+
 ```tsx
-'use client'
-import { useState } from 'react'
+"use client";
+import { useState } from "react";
 
 export default function CopilotPanel() {
-  const [input, setInput] = useState('')
-  const [results, setResults] = useState([])
+  const [input, setInput] = useState("");
+  const [results, setResults] = useState([]);
 
   const runCommand = async () => {
-    const res = await fetch('/api/copilot/run', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cmd: input })
-    })
-    const data = await res.json()
-    setResults([...results, data])
-  }
+    const res = await fetch("/api/copilot/run", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cmd: input }),
+    });
+    const data = await res.json();
+    setResults([...results, data]);
+  };
 
   return (
     <div className="h-full flex flex-col bg-[--panel] border-l border-[--border]">
@@ -242,20 +265,21 @@ export default function CopilotPanel() {
       <div className="p-4 border-t border-[--border]">
         <input
           value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && runCommand()}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && runCommand()}
           placeholder="/insights, /justify, /draft-prd"
           className="w-full bg-[--bg] border border-[--border] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[--accent]"
         />
       </div>
     </div>
-  )
+  );
 }
 ```
 
 ### Implementation Steps (UI)
 
 1. **Install dependencies**
+
    ```bash
    cd apps/web
    npm install react-resizable-panels cmdk @monaco-editor/react lucide-react framer-motion
@@ -264,6 +288,7 @@ export default function CopilotPanel() {
 2. **Update globals.css** with dark theme tokens
 
 3. **Create component structure**
+
    ```
    components/
    ├── layout/
@@ -323,12 +348,14 @@ ZOOM_CLIENT_SECRET=xxx
 ### OAuth Redirect URIs
 
 Configure in provider consoles:
+
 - **Google**: `http://localhost:8000/auth/google/callback`
 - **Zoom**: `http://localhost:8000/auth/zoom/callback`
 
 ### Celery Beat
 
 Update `docker-compose.yml` to add beat service:
+
 ```yaml
 beat:
   build: ./apps/worker
@@ -361,4 +388,3 @@ beat:
 3. Begin UI implementation using blueprints above
 4. Iterate on design system
 5. Add telemetry and monitoring
-

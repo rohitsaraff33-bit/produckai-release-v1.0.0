@@ -1,4 +1,4 @@
 // Background service worker
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('ProduckAI extension installed');
+  console.log("ProduckAI extension installed");
 });

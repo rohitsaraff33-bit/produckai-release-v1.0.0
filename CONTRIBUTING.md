@@ -16,12 +16,14 @@ ProduckAI is built **for product managers, by product managers**. Our goal is to
 We especially welcome contributions in these areas:
 
 ### 🔌 Integration Enhancements
+
 - New data sources (Linear, Notion, Intercom, Zendesk, etc.)
 - Improved parsing for existing integrations (Slack threads, Jira comments)
 - OAuth flow improvements
 - Webhook support for real-time ingestion
 
 ### 🧠 ML & Clustering
+
 - Alternative clustering algorithms (DBSCAN, Agglomerative, etc.)
 - Multi-language embedding models
 - Improved theme naming (using LLMs)
@@ -29,24 +31,28 @@ We especially welcome contributions in these areas:
 - Duplicate detection improvements
 
 ### 📊 Scoring & Analytics
+
 - New VOC scoring dimensions
 - Custom scoring formulas
 - Advanced analytics (trend detection, churn prediction)
 - A/B testing framework for scoring weights
 
 ### 🎨 Frontend & UX
+
 - Web UI improvements (Next.js)
 - Chrome extension features
 - Mobile-friendly views
 - Accessibility improvements
 
 ### 📚 Documentation
+
 - Tutorial videos
 - Integration guides
 - Architecture deep-dives
 - Translation to other languages
 
 ### 🧪 Testing & Quality
+
 - Unit tests
 - Integration tests
 - Performance benchmarks
@@ -90,6 +96,7 @@ git checkout -b feature/your-feature-name
 ```
 
 Follow these naming conventions:
+
 - `feature/` - New features
 - `fix/` - Bug fixes
 - `docs/` - Documentation updates
@@ -151,6 +158,7 @@ git commit -m "feat: add Linear integration support"
 ```
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/):
+
 - `feat:` - New features
 - `fix:` - Bug fixes
 - `docs:` - Documentation changes
@@ -187,21 +195,26 @@ Before submitting a PR, ensure:
 
 ```markdown
 ## Description
+
 Brief description of what this PR does
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
 - [ ] Documentation update
 
 ## How Has This Been Tested?
+
 Describe the tests you ran
 
 ## Screenshots (if applicable)
+
 Add screenshots for UI changes
 
 ## Checklist
+
 - [ ] Tests pass
 - [ ] Code is formatted
 - [ ] Documentation updated
@@ -222,6 +235,7 @@ Add screenshots for UI changes
 ### Backend (FastAPI)
 
 **File structure:**
+
 ```
 apps/api/
 ├── api/               # API routes
@@ -238,6 +252,7 @@ apps/api/
 ```
 
 **Best practices:**
+
 - Use Pydantic for request/response models
 - Keep routes thin, logic in services
 - Type hints everywhere (`mypy` enforced)
@@ -247,6 +262,7 @@ apps/api/
 ### Frontend (Next.js)
 
 **File structure:**
+
 ```
 apps/web/
 ├── app/               # App Router pages
@@ -259,6 +275,7 @@ apps/web/
 ```
 
 **Best practices:**
+
 - Use TypeScript for all files
 - Tailwind CSS for styling
 - Server components by default
@@ -287,6 +304,7 @@ make migrate
 6. Add documentation in README and INSTALLATION.md
 
 **Example:**
+
 ```python
 # apps/api/services/ingestion/extractors/linear.py
 from .base import BaseExtractor, IngestionResult
@@ -355,19 +373,24 @@ docker compose exec api pytest -v
 
 ```markdown
 ## Describe the Bug
+
 Clear description of what went wrong
 
 ## To Reproduce
+
 Steps to reproduce:
+
 1. Start services with `make up`
 2. Run `make cluster`
 3. Check logs with `make logs-worker`
 4. See error: "..."
 
 ## Expected Behavior
+
 What you expected to happen
 
 ## Environment
+
 - OS: macOS 14.5
 - Docker version: 24.0.6
 - Python version: 3.11.5
@@ -375,7 +398,9 @@ What you expected to happen
 
 ## Logs
 ```
+
 Paste relevant logs here
+
 ```
 
 ## Screenshots
@@ -390,18 +415,23 @@ If applicable, add screenshots
 
 ```markdown
 ## Feature Description
+
 What feature would you like to see?
 
 ## Use Case
+
 Why is this feature needed? How will it be used?
 
 ## Proposed Solution
+
 Your ideas on how this could be implemented
 
 ## Alternatives Considered
+
 Other approaches you've thought about
 
 ## Additional Context
+
 Screenshots, mockups, examples from other tools
 ```
 
@@ -453,6 +483,7 @@ By contributing, you agree that your contributions will be licensed under the MI
 ## 🎉 Recognition
 
 Contributors will be:
+
 - Listed in the project's README
 - Mentioned in release notes
 - Eligible for "Top Contributor" badge

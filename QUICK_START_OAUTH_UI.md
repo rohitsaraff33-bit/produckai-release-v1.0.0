@@ -23,6 +23,7 @@ UPGRADE_SUMMARY_OAUTH_CURSOR_UI.md       # Full status & checklist
 ## 🚀 5-Minute Setup
 
 ### 1. Generate APP_SECRET
+
 ```bash
 python -c 'import os,base64; print("APP_SECRET=" + base64.b64encode(os.urandom(32)).decode())'
 # Copy output to .env
@@ -31,6 +32,7 @@ python -c 'import os,base64; print("APP_SECRET=" + base64.b64encode(os.urandom(3
 ### 2. Create Missing Files
 
 **Migration** (`infra/alembic/versions/003_add_oauth_tokens.py`):
+
 ```bash
 # Open OAUTH_CURSOR_UI_IMPLEMENTATION.md
 # Search for "003_add_oauth_tokens"
@@ -38,6 +40,7 @@ python -c 'import os,base64; print("APP_SECRET=" + base64.b64encode(os.urandom(3
 ```
 
 **Auth Endpoints** (`apps/api/api/auth.py`):
+
 ```bash
 # Open OAUTH_CURSOR_UI_IMPLEMENTATION.md
 # Search for "apps/api/api/auth.py"
@@ -45,6 +48,7 @@ python -c 'import os,base64; print("APP_SECRET=" + base64.b64encode(os.urandom(3
 ```
 
 **Celery Task** (`apps/worker/tasks/token_refresh.py`):
+
 ```bash
 # Open OAUTH_CURSOR_UI_IMPLEMENTATION.md
 # Search for "token_refresh.py"
@@ -54,12 +58,14 @@ python -c 'import os,base64; print("APP_SECRET=" + base64.b64encode(os.urandom(3
 ### 3. Update Existing Files
 
 **`apps/api/main.py`** - Add auth router:
+
 ```python
 from apps/api.api.auth import router as auth_router
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 ```
 
 **`docker-compose.yml`** - Add beat service:
+
 ```yaml
 beat:
   build: ./apps/worker
@@ -72,6 +78,7 @@ beat:
 ```
 
 **`.env`** - Add OAuth config:
+
 ```bash
 APP_SECRET=<generated-above>
 OAUTH_REDIRECT_BASE_URL=http://localhost:8000
@@ -213,47 +220,48 @@ open http://localhost:3000
 
 ## 📚 Documentation Map
 
-| File | Purpose | What's Inside |
-|------|---------|---------------|
-| `QUICK_START_OAUTH_UI.md` | **This file** | Quick commands & file tree |
-| `UPGRADE_SUMMARY_OAUTH_CURSOR_UI.md` | Status dashboard | What's done, what's left, testing checklist |
-| `OAUTH_CURSOR_UI_IMPLEMENTATION.md` | Complete code reference | All OAuth code + UI starters |
-| `IMPLEMENTATION_GUIDE_OAUTH_UI.md` | Detailed guide | UI blueprints, design system, architecture |
+| File                                 | Purpose                 | What's Inside                               |
+| ------------------------------------ | ----------------------- | ------------------------------------------- |
+| `QUICK_START_OAUTH_UI.md`            | **This file**           | Quick commands & file tree                  |
+| `UPGRADE_SUMMARY_OAUTH_CURSOR_UI.md` | Status dashboard        | What's done, what's left, testing checklist |
+| `OAUTH_CURSOR_UI_IMPLEMENTATION.md`  | Complete code reference | All OAuth code + UI starters                |
+| `IMPLEMENTATION_GUIDE_OAUTH_UI.md`   | Detailed guide          | UI blueprints, design system, architecture  |
 
 ---
 
 ## ⏱️ Time Estimates
 
-| Task | Time | Status |
-|------|------|--------|
-| **OAuth Backend** | | |
-| Copy 3 files from docs | 15 min | ⏳ TODO |
-| Update 4 files | 15 min | ⏳ TODO |
-| Configure OAuth apps (Google + Zoom) | 30 min | ⏳ TODO |
-| Test OAuth flow | 20 min | ⏳ TODO |
-| **SUBTOTAL** | **1.5 hours** | |
-| | | |
-| **Cursor UI** | | |
-| Install dependencies | 5 min | ⏳ TODO |
-| Dark theme tokens | 20 min | ⏳ TODO |
-| AppShell + layout | 4 hours | ⏳ TODO |
-| Command Palette | 3 hours | ⏳ TODO |
-| Copilot Panel | 3 hours | ⏳ TODO |
-| Explorer Panel | 4 hours | ⏳ TODO |
-| Integrations page | 3 hours | ⏳ TODO |
-| Theme components (dark) | 4 hours | ⏳ TODO |
-| Monaco editor integration | 4 hours | ⏳ TODO |
-| Keyboard shortcuts | 2 hours | ⏳ TODO |
-| Testing + polish | 6 hours | ⏳ TODO |
-| **SUBTOTAL** | **33 hours** | |
-| | | |
-| **GRAND TOTAL** | **34.5 hours** | |
+| Task                                 | Time           | Status  |
+| ------------------------------------ | -------------- | ------- |
+| **OAuth Backend**                    |                |         |
+| Copy 3 files from docs               | 15 min         | ⏳ TODO |
+| Update 4 files                       | 15 min         | ⏳ TODO |
+| Configure OAuth apps (Google + Zoom) | 30 min         | ⏳ TODO |
+| Test OAuth flow                      | 20 min         | ⏳ TODO |
+| **SUBTOTAL**                         | **1.5 hours**  |         |
+|                                      |                |         |
+| **Cursor UI**                        |                |         |
+| Install dependencies                 | 5 min          | ⏳ TODO |
+| Dark theme tokens                    | 20 min         | ⏳ TODO |
+| AppShell + layout                    | 4 hours        | ⏳ TODO |
+| Command Palette                      | 3 hours        | ⏳ TODO |
+| Copilot Panel                        | 3 hours        | ⏳ TODO |
+| Explorer Panel                       | 4 hours        | ⏳ TODO |
+| Integrations page                    | 3 hours        | ⏳ TODO |
+| Theme components (dark)              | 4 hours        | ⏳ TODO |
+| Monaco editor integration            | 4 hours        | ⏳ TODO |
+| Keyboard shortcuts                   | 2 hours        | ⏳ TODO |
+| Testing + polish                     | 6 hours        | ⏳ TODO |
+| **SUBTOTAL**                         | **33 hours**   |         |
+|                                      |                |         |
+| **GRAND TOTAL**                      | **34.5 hours** |         |
 
 ---
 
 ## ✅ Verification Checklist
 
 ### OAuth Backend (Phase 1)
+
 - [ ] APP_SECRET generated and in `.env`
 - [ ] Migration file created
 - [ ] Auth endpoints file created
@@ -272,6 +280,7 @@ open http://localhost:3000
 - [ ] Celery beat runs every 10 minutes
 
 ### Cursor UI (Phase 2)
+
 - [ ] Dependencies installed
 - [ ] Dark theme applied
 - [ ] AppShell renders
@@ -291,6 +300,7 @@ open http://localhost:3000
 ## 🆘 Troubleshooting
 
 **Issue**: Migration fails with "enum already exists"
+
 ```bash
 # Reset database
 docker compose down -v
@@ -299,6 +309,7 @@ docker compose exec api alembic upgrade head
 ```
 
 **Issue**: Cannot import oauth providers
+
 ```bash
 # Check files exist
 ls apps/api/auth/providers/
@@ -306,6 +317,7 @@ ls apps/api/auth/providers/
 ```
 
 **Issue**: Token decryption fails
+
 ```bash
 # Verify APP_SECRET is 32 bytes when base64-decoded
 python -c 'import base64; print(len(base64.b64decode("YOUR_SECRET")))'
@@ -313,6 +325,7 @@ python -c 'import base64; print(len(base64.b64decode("YOUR_SECRET")))'
 ```
 
 **Issue**: OAuth callback fails
+
 ```bash
 # Check redirect URI matches exactly in OAuth app config
 # Must be: http://localhost:8000/auth/google/callback
@@ -334,12 +347,14 @@ python -c 'import base64; print(len(base64.b64decode("YOUR_SECRET")))'
 ## 🎉 Success Indicators
 
 ✅ **OAuth Working**:
+
 - Open `/auth/google/start` → redirects to Google
 - Complete OAuth flow → see "Success" message
 - Check `/auth/connections` → see active token
 - Celery beat logs show "refresh_expiring_tokens" scheduled
 
 ✅ **UI Working**:
+
 - Press ⌘K → command palette opens
 - Press ⌘. → copilot panel toggles
 - Themes render in dark mode
@@ -349,4 +364,3 @@ python -c 'import base64; print(len(base64.b64decode("YOUR_SECRET")))'
 ---
 
 **Ready to start?** Follow the 5-Minute Setup above! 🚀
-
